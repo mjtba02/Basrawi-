@@ -75,6 +75,13 @@
                 <span>⭐ نقاط الولاء: <strong id="loyalty-points">120</strong> نقطة</span>
                 <span>🎁 الكوبونات: <strong style="color: var(--secondary-color);">مفعلة</strong></span>
             </div>
+            
+            <!-- الطلب السريع بضغطة زر -->
+            <div style="background: var(--card-bg); border: 1px dashed var(--primary-color); padding: 10px; border-radius: 10px; margin-bottom: 12px; text-align: center;">
+                <p style="font-size: 12px; margin-bottom: 6px; font-weight: bold;">⚡ الطلب السريع (الأكثر طلباً في البصرة):</p>
+                <button class="btn" style="margin: 0; padding: 6px; font-size: 13px;" onclick="quickOneTapOrder()">وجبة مشاوي الشطيطة السريعة</button>
+            </div>
+
             <div class="services-grid">
                 <div class="card" onclick="showSection('taxi-section')">
                     <div class="icon">🚕</div>
@@ -102,20 +109,32 @@
                 </div>
             </div>
         </div>
-        <!-- قسم التكسي مع العناوين السريعة وجدولة الرحلات -->
+        <!-- قسم التكسي مع العناوين المحفوظة، الإكرامية، والملاحظات -->
         <div id="taxi-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
-            <h2>حجز رحلة تكسي</h2>
+            <h2>حجز رحلة تكسي ذكية</h2>
             <div style="display: flex; gap: 5px;">
                 <input type="text" id="pickup" placeholder="موقع الانطلاق (العشار، الجنينة..)" style="flex: 1;">
                 <button class="btn" style="width: auto; margin-top: 6px;" onclick="getGPSLocation()">📍 GPS</button>
             </div>
+            
             <div style="margin-bottom: 5px;">
                 <span class="quick-tag" onclick="setSavedAddress('pickup', 'البيت (الجزائر)')">🏠 البيت</span>
                 <span class="quick-tag" onclick="setSavedAddress('pickup', 'العمل (المعقل)')">💼 العمل</span>
+                <span class="quick-tag" onclick="setSavedAddress('pickup', 'بيت الأهل (العشار)')">👨‍👩‍👦 بيت الأهل</span>
             </div>
+
             <input type="text" id="destination" placeholder="وجهة الوصول.." oninput="calculateFare()">
             
+            <div style="display: flex; gap: 8px; margin-top: 5px;">
+                <select id="taxi-tip" style="flex: 1; margin: 0; font-size: 12px;">
+                    <option value="0">بدون إكرامية للكابتن</option>
+                    <option value="1000">إكرامية 1,000 د.ع</option>
+                    <option value="2000">إكرامية 2,000 د.ع</option>
+                </select>
+                <input type="text" id="driver-note" placeholder="ملاحظة للسائق.." style="flex: 1; margin: 0; font-size: 12px;">
+            </div>
+
             <label style="font-size: 12px; margin-top: 8px; display: block;">⏰ جدولة الرحلة لوقت لاحق (اختياري):</label>
             <input type="time" id="schedule-time">
 
@@ -160,7 +179,7 @@
             </div>
         </div>
 
-        <!-- قسم سلة التسوق الذكية (+ و - والخصم) -->
+        <!-- قسم سلة التسوق -->
         <div id="cart-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>سلة الطلبات والخصومات</h2>
@@ -189,23 +208,26 @@
         <!-- قسم الملف الشخصي -->
         <div id="profile-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
-            <h2>الملف الشخصي والعناوين المفضلة</h2>
+            <h2>الملف الشخصي والعناوين المحفوظة</h2>
             <input type="text" id="user-name" value="مجتبى مازن" placeholder="الاسم الكامل">
             <input type="text" id="user-phone" value="07700000000" placeholder="رقم الهاتف">
             <input type="text" id="user-address" value="البصرة - الجزائر" placeholder="عنوان البيت الأساسي">
             <button class="btn" onclick="saveProfile()">حفظ التعديلات</button>
         </div>
 
-        <!-- قسم التتبع، الخريطة المتحركة وإلغاء الطلب -->
+        <!-- قسم التتبع، مشاركة الرحلة وإلغائها -->
         <div id="tracking-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>تتبع رحلتك أو طلبك</h2>
             <p style="margin-top: 10px;">حالة الطلب: <strong id="order-status-text" style="color: var(--secondary-color);">الكابتن في طريقه إليك</strong></p>
-            <div style="background: rgba(0,0,0,0.05); height: 140px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; position: relative; overflow: hidden;">
+            <div style="background: rgba(0,0,0,0.05); height: 130px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; position: relative; overflow: hidden;">
                 <div id="moving-map-icon" style="position: absolute; left: 10%; font-size: 24px; transition: left 1s linear;">🚗</div>
                 <span style="z-index: 2; margin-top: 35px; font-weight: bold;">🗺️ [خريطة شوارع البصرة الحية]</span>
             </div>
-            <button class="btn" style="background: #dc3545; margin-top: 10px; padding: 6px;" onclick="cancelActiveOrder()">إلغاء الطلب / الرحلة</button>
+            <div style="display: flex; gap: 5px; margin-top: 10px;">
+                <button class="btn" style="background: #25d366; margin: 0; padding: 8px; font-size: 13px; flex: 1;" onclick="shareTripViaWhatsApp()">📤 مشاركة الرحلة</button>
+                <button class="btn" style="background: #dc3545; margin: 0; padding: 8px; font-size: 13px; flex: 1;" onclick="cancelActiveOrder()">إلغاء الطلب</button>
+            </div>
             <div style="margin-top: 12px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 8px;">
                 <p style="font-size: 12px; margin-bottom: 3px;">قيم تجربتك:</p>
                 <div style="font-size: 20px; cursor: pointer;" onclick="rateService()">⭐ ⭐ ⭐ ⭐ ⭐</div>
@@ -236,7 +258,7 @@
             </div>
         </div>
 
-        <!-- قسم سجل الطلبات مع ميزة (إعادة الطلب) -->
+        <!-- قسم سجل الطلبات -->
         <div id="history-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>سجل الطلبات والرحلات</h2>
@@ -259,6 +281,7 @@
         };
 
         function changeLanguage(lang) {
+            triggerVibration();
             const root = document.getElementById('html-root');
             root.lang = lang;
             root.dir = (lang === 'ku' || lang === 'ar') ? 'rtl' : 'ltr';
@@ -274,18 +297,27 @@
             document.getElementById('t-chat').innerText = t.chat;
         }
 
+        function triggerVibration() {
+            if (navigator.vibrate) {
+                navigator.vibrate(30); // اهتزاز خفيف وناعم جداً
+            }
+        }
+
         function showSection(sectionId) {
+            triggerVibration();
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
             if (sectionId === 'tracking-section') { startMovingMap(); }
         }
 
         function toggleDarkMode() {
+            triggerVibration();
             const body = document.body;
             body.setAttribute('data-theme', body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
         }
 
         function getGPSLocation() {
+            triggerVibration();
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
                     document.getElementById('pickup').value = `موقعي الحالي (${position.coords.latitude.toFixed(2)})`;
@@ -295,8 +327,15 @@
         }
 
         function setSavedAddress(fieldId, addressText) {
+            triggerVibration();
             document.getElementById(fieldId).value = addressText;
             showNotification(`تم تحديد عنوان: ${addressText}`);
+        }
+
+        function quickOneTapOrder() {
+            triggerVibration();
+            addToCart('وجبة مشاوي الشطيطة السريعة', 7000);
+            showSection('cart-section');
         }
 
         function calculateFare() {
@@ -315,6 +354,7 @@
         }
 
         function addToCart(name, price) {
+            triggerVibration();
             let existing = cart.find(item => item.name === name);
             if (existing) {
                 existing.qty += 1;
@@ -326,6 +366,7 @@
         }
 
         function changeQty(index, delta) {
+            triggerVibration();
             cart[index].qty += delta;
             if (cart[index].qty <= 0) {
                 cart.splice(index, 1);
@@ -334,6 +375,7 @@
         }
 
         function applyPromo() {
+            triggerVibration();
             const code = document.getElementById('promo-code').value.trim();
             if (code.toUpperCase() === 'BASRA') {
                 discountRate = 0.2;
@@ -370,13 +412,18 @@
         }
 
         function bookTaxi() {
+            triggerVibration();
             const p = document.getElementById('pickup').value;
             const d = document.getElementById('destination').value;
             const time = document.getElementById('schedule-time').value;
+            const tip = parseInt(document.getElementById('taxi-tip').value) || 0;
+            const note = document.getElementById('driver-note').value;
+            
             if(p && d) {
                 let msg = time ? `تم جدولة رحلة تكسي الساعة (${time})` : 'تم طلب الكابتن الفوري بنجاح!';
+                if (tip > 0) msg += ` مع إكرامية ${tip} د.ع`;
                 showNotification(msg);
-                historyData.push(`رحلة تكسي من (${p}) إلى (${d}) ${time ? '[مجدولة: '+time+']' : ''}`);
+                historyData.push(`رحلة تكسي من (${p}) إلى (${d}) ${note ? '[ملاحظة: '+note+']' : ''}`);
                 loyaltyPoints += 15;
                 updateLoyaltyUI();
                 updateHistoryUI();
@@ -385,6 +432,7 @@
         }
 
         function checkout() {
+            triggerVibration();
             if (cart.length === 0) { alert('السلة فارغة!'); return; }
             let total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
             if (discountRate > 0) total = total * (1 - discountRate);
@@ -408,10 +456,17 @@
         }
 
         function cancelActiveOrder() {
+            triggerVibration();
             if (confirm('هل أنت متأكد من رغبتك بإلغاء الطلب/الرحلة؟')) {
                 showNotification('تم إلغاء الطلب بنجاح.');
                 showSection('home-section');
             }
+        }
+
+        function shareTripViaWhatsApp() {
+            triggerVibration();
+            let text = encodeURIComponent("أنا في رحلة تكسي عبر تطبيق بصراوي في البصرة الآن، وفي طريقي لوجهتي بسلام.");
+            window.open(`https://wa.me/?text=${text}`, '_blank');
         }
 
         function reorderItem(itemName) {
@@ -420,15 +475,17 @@
         }
 
         function rechargeWallet() {
+            triggerVibration();
             walletBalance += 10000;
             document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
             showNotification('تم شحن المحفظة بـ 10,000 د.ع بنجاح!');
         }
 
-        function saveProfile() { showNotification('تم حفظ بيانات الحساب بنجاح!'); }
-        function rateService() { alert('شكراً لتقييمك!'); }
+        function saveProfile() { triggerVibration(); showNotification('تم حفظ بيانات الحساب بنجاح!'); }
+        function rateService() { triggerVibration(); alert('شكراً لتقييمك!'); }
 
         function sendChatMessage() {
+            triggerVibration();
             const input = document.getElementById('chat-input');
             const chatBox = document.getElementById('chat-messages');
             if (input.value.trim() !== '') {
