@@ -1,0 +1,15 @@
+{
+  "name": "بصراوي - Basrawi",
+  "short_name": "بصراوي",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#006400",
+  "theme_color": "#006400",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
