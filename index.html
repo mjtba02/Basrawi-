@@ -25,6 +25,17 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background 0.3s, color 0.3s; }
         body { background-color: var(--bg-color); color: var(--text-color); padding-bottom: 80px; }
+        
+        /* شاشة التحميل والترحيل (Splash Screen) */
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s ease; }
+        .splash-logo { width: 90px; height: 90px; background: white; color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 22px; margin-bottom: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.3); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+
+        /* إشعارات الـ Toast العصرية */
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 8px; width: 90%; max-width: 400px; pointer-events: none; }
+        .toast-msg { background: rgba(0, 0, 0, 0.85); color: white; padding: 12px 18px; border-radius: 10px; font-size: 13px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); animation: fadeInOut 3.5s forwards; pointer-events: auto; }
+        @keyframes fadeInOut { 0% { opacity: 0; transform: translateY(-20px); } 15% { opacity: 1; transform: translateY(0); } 85% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
+
         header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; position: relative; }
         .top-controls { position: absolute; top: 15px; left: 15px; display: flex; gap: 5px; flex-wrap: wrap; }
         .icon-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 8px; border-radius: 12px; cursor: pointer; font-size: 11px; }
@@ -41,13 +52,22 @@
         .section.active { display: block; }
         .btn { background: var(--secondary-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; width: 100%; font-size: 15px; margin-top: 10px; cursor: pointer; font-weight: bold; }
         .back-btn { background: #6c757d; margin-bottom: 12px; }
-        input, select { width: 100%; padding: 10px; margin: 6px 0; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); border-radius: 8px; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 6px 0; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); border-radius: 8px; font-size: 14px; }
         .restaurant-item { padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .alert-box { background: rgba(0, 100, 0, 0.1); border-right: 4px solid var(--primary-color); padding: 10px; margin-bottom: 12px; border-radius: 5px; font-size: 13px; }
         .quick-tag { background: rgba(0,100,0,0.1); color: var(--primary-color); padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; display: inline-block; margin-top: 4px; font-weight: bold; }
     </style>
 </head>
 <body data-theme="light">
+
+    <!-- شاشة الترحيل الذكية -->
+    <div id="splash-screen">
+        <div class="splash-logo">بصراوي</div>
+        <h2>Basrawi Super-App</h2>
+        <p style="font-size: 13px; opacity: 0.8; margin-top: 5px;">جاري تحميل عاصمة البصرة...</p>
+    </div>
+
+    <!-- صندوق الإشعارات الحية -->
+    <div id="toast-container"></div>
 
     <header>
         <div class="top-controls">
@@ -66,8 +86,6 @@
     </header>
 
     <div class="container">
-        <div id="live-alert" class="alert-box">👋 أهلاً بك في بصراوي! استمتع بأقوى الخدمات الذكية في البصرة.</div>
-
         <!-- الرئيسية -->
         <div id="home-section" class="section active">
             <h2 id="t-what-to-do" style="font-size: 16px; margin-bottom: 10px;">ماذا ترغب أن تطلب اليوم؟</h2>
@@ -76,7 +94,6 @@
                 <span>🎁 الكوبونات: <strong style="color: var(--secondary-color);">مفعلة</strong></span>
             </div>
             
-            <!-- الطلب السريع بضغطة زر -->
             <div style="background: var(--card-bg); border: 1px dashed var(--primary-color); padding: 10px; border-radius: 10px; margin-bottom: 12px; text-align: center;">
                 <p style="font-size: 12px; margin-bottom: 6px; font-weight: bold;">⚡ الطلب السريع (الأكثر طلباً في البصرة):</p>
                 <button class="btn" style="margin: 0; padding: 6px; font-size: 13px;" onclick="quickOneTapOrder()">وجبة مشاوي الشطيطة السريعة</button>
@@ -144,7 +161,7 @@
             <button class="btn" onclick="bookTaxi()">اطلب الكابتن الآن</button>
         </div>
 
-        <!-- قسم المطاعم مع التصفية -->
+        <!-- قسم المطاعم مع ملاحظات الطلب -->
         <div id="restaurants-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>مطاعم البصرة</h2>
@@ -154,7 +171,10 @@
                 <option value="fastfood">وجبات سريعة</option>
                 <option value="juice">عصائر ومثلجات</option>
             </select>
-            <div id="restaurants-list" style="margin-top: 10px;">
+            
+            <textarea id="food-special-note" placeholder="ملاحظات خاصة للطعام (مثلاً: بدون بصل، حار جداً..)" style="margin-bottom: 10px; height: 50px; font-size: 12px;"></textarea>
+
+            <div id="restaurants-list" style="margin-top: 5px;">
                 <div class="restaurant-item" data-category="grill">
                     <div>
                         <strong>مطعم الشطيطة الأصيل</strong>
@@ -194,7 +214,7 @@
             <p style="font-weight: bold;">المجموع النهائي: <span id="cart-total">0</span> د.ع</p>
             <button class="btn" onclick="checkout()">تأكيد وإرسال الطلب</button>
         </div>
-        <!-- قسم المحفظة الإلكترونية -->
+        <!-- قسم المحفظة مع سجل العمليات المالية -->
         <div id="wallet-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>محفظة بصراوي 💰</h2>
@@ -202,7 +222,12 @@
                 <p style="font-size: 13px; opacity: 0.9;">رصيدك الحالي</p>
                 <h3 style="font-size: 26px; margin: 5px 0;"><span id="wallet-balance">15,000</span> د.ع</h3>
             </div>
-            <button class="btn" onclick="rechargeWallet()">شحن المحفظة (زين كاش)</button>
+            <button class="btn" onclick="rechargeWallet()">شحن المحفظة بـ 10,000 د.ع</button>
+            
+            <h3 style="font-size: 14px; margin-top: 15px; margin-bottom: 5px;">📜 سجل المعاملات المالية:</h3>
+            <div id="wallet-log" style="background: rgba(0,0,0,0.03); padding: 10px; border-radius: 8px; max-height: 100px; overflow-y: auto; font-size: 12px;">
+                <p style="color: #666;">+ شحن افتراضي: 15,000 د.ع</p>
+            </div>
         </div>
 
         <!-- قسم الملف الشخصي -->
@@ -215,33 +240,31 @@
             <button class="btn" onclick="saveProfile()">حفظ التعديلات</button>
         </div>
 
-        <!-- قسم التتبع مع الخريطة الحية (سيارات ودراجات تتحرك افتراضياً) -->
+        <!-- قسم التتبع مع مشاركة الإحداثيات الحية -->
         <div id="tracking-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>تتبع رحلتك أو طلبك النشط</h2>
-            <p style="margin-top: 10px;">حالة الطلب: <strong id="order-status-text" style="color: var(--secondary-color);">الكابتن أو الدراجة في الطريق إليك</strong></p>
+            <p style="margin-top: 10px;">حالة الطلب: <strong id="order-status-text" style="color: var(--secondary-color);">الكابتن في الطريق إليك</strong></p>
             
-            <!-- خريطة البصرة التفاعلية مع أسطول متحرك افتراضياً -->
             <div style="background: rgba(0,0,0,0.05); height: 160px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; position: relative; overflow: hidden; border: 1px solid var(--border-color);">
-                <!-- شبكة الشوارع الافتراضية -->
                 <div style="position: absolute; width: 100%; height: 2px; background: rgba(0,100,0,0.2); top: 50%;"></div>
                 <div style="position: absolute; height: 100%; width: 2px; background: rgba(0,100,0,0.2); left: 50%;"></div>
                 
-                <!-- الأيقونات الافتراضية المتحركة (تكسي، دراجة، دليفري) -->
                 <div id="fleet-car-1" style="position: absolute; top: 20%; left: 10%; font-size: 20px; transition: all 1.5s linear;">🚕</div>
                 <div id="fleet-bike-1" style="position: absolute; bottom: 25%; left: 70%; font-size: 20px; transition: all 1.5s linear;">🛵</div>
-                <div id="fleet-car-2" style="position: absolute; top: 60%; left: 40%; font-size: 20px; transition: all 1.5s linear;">🚙</div>
 
                 <span style="z-index: 2; background: rgba(255,255,255,0.8); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; color: var(--primary-color);">🗺️ خريطة البصرة الحية (أسطول بصراوي)</span>
             </div>
 
             <div style="display: flex; gap: 5px; margin-top: 10px;">
-                <button class="btn" style="background: #25d366; margin: 0; padding: 8px; font-size: 13px; flex: 1;" onclick="shareTripViaWhatsApp()">📤 مشاركة الرحلة</button>
-                <button class="btn" style="background: #dc3545; margin: 0; padding: 8px; font-size: 13px; flex: 1;" onclick="cancelActiveOrder()">إلغاء الطلب</button>
+                <button class="btn" style="background: #007bff; margin: 0; padding: 8px; font-size: 12px; flex: 1;" onclick="shareLiveCoordinates()">📍 مشاركة إحداثياتي</button>
+                <button class="btn" style="background: #25d366; margin: 0; padding: 8px; font-size: 12px; flex: 1;" onclick="shareTripViaWhatsApp()">📤 واتساب</button>
+                <button class="btn" style="background: #dc3545; margin: 0; padding: 8px; font-size: 12px; flex: 1;" onclick="cancelActiveOrder()">إلغاء</button>
             </div>
-            <div style="margin-top: 12px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 8px;">
-                <p style="font-size: 12px; margin-bottom: 3px;">قيم تجربتك:</p>
-                <div style="font-size: 20px; cursor: pointer;" onclick="rateService()">⭐ ⭐ ⭐ ⭐ ⭐</div>
+            
+            <div style="margin-top: 10px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 6px;">
+                <p style="font-size: 12px; margin-bottom: 2px;">قيم تجربتك:</p>
+                <div style="font-size: 18px; cursor: pointer;" onclick="rateService()">⭐ ⭐ ⭐ ⭐ ⭐</div>
             </div>
         </div>
 
@@ -281,6 +304,7 @@
     <script>
         let cart = [];
         let historyData = [];
+        let walletLogData = ["+ إيداع افتراضي: 15,000 د.ع"];
         let walletBalance = 15000;
         let loyaltyPoints = 120;
         let discountRate = 0;
@@ -291,6 +315,23 @@
             en: { title: "Basrawi", subtitle: "Your ultimate Super-App in Basra", whatTodo: "What would you like today?", taxi: "Book Taxi", restaurants: "Food & Restaurants", tracking: "Live Tracking", history: "Order History", profile: "My Profile", chat: "Live Chat" },
             ku: { title: "Basrawi", subtitle: "پلاتفۆرمی خزمەتگوزاری لە بصڕە", whatTodo: "ئەمڕۆ چیت دەوێت؟", taxi: "تەکسی", restaurants: "چێشتخانەکان", tracking: "دوایین دۆخ", history: "مێژوو", profile: "هەژمارەکەم", chat: "چاتی ڕاستەوخۆ" }
         };
+
+        // إخفاء شاشة الترحيل وتفعيل الوضع الليلي التلقائي حسب الوقت
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if (splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => splash.remove(), 500);
+                }
+            }, 1200);
+
+            // الوضع الليلي التلقائي إذا كانت الساعة بعد 7 مساءً (19:00)
+            const currentHour = new Date().getHours();
+            if (currentHour >= 19 || currentHour < 6) {
+                document.body.setAttribute('data-theme', 'dark');
+            }
+        });
 
         function changeLanguage(lang) {
             triggerVibration();
@@ -336,15 +377,15 @@
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
                     document.getElementById('pickup').value = `موقعي الحالي (${position.coords.latitude.toFixed(2)})`;
-                    showNotification('تم تحديث موقعك عبر الـ GPS بنجاح!');
-                }, () => { alert('تعذر تحديد الموقع.'); });
-            } else { alert('الـ GPS غير مدعوم.'); }
+                    showToast('تم تحديث موقعك عبر الـ GPS بنجاح!');
+                }, () => { showToast('تعذر تحديد الموقع.'); });
+            } else { showToast('الـ GPS غير مدعوم.'); }
         }
 
         function setSavedAddress(fieldId, addressText) {
             triggerVibration();
             document.getElementById(fieldId).value = addressText;
-            showNotification(`تم تحديد عنوان: ${addressText}`);
+            showToast(`تم تحديد عنوان: ${addressText}`);
         }
 
         function quickOneTapOrder() {
@@ -373,7 +414,7 @@
             let existing = cart.find(item => item.name === name);
             if (existing) { existing.qty += 1; } else { cart.push({ name, price, qty: 1 }); }
             updateCartUI();
-            showNotification(`تم إضافة (${name}) للسلة!`);
+            showToast(`تم إضافة (${name}) للسلة!`);
         }
 
         function changeQty(index, delta) {
@@ -388,9 +429,9 @@
             const code = document.getElementById('promo-code').value.trim();
             if (code.toUpperCase() === 'BASRA') {
                 discountRate = 0.2;
-                showNotification('تم تطبيق كود الخصم (BASRA) بنجاح (-20%)!');
+                showToast('تم تطبيق كود الخصم (BASRA) بنجاح (-20%)!');
                 updateCartUI();
-            } else { alert('كود الخصم غير صحيح!'); }
+            } else { showToast('كود الخصم غير صحيح!'); }
         }
 
         function updateCartUI() {
@@ -431,26 +472,31 @@
             if(p && d) {
                 let msg = time ? `تم جدولة رحلة تكسي الساعة (${time})` : 'تم طلب الكابتن الفوري بنجاح!';
                 if (tip > 0) msg += ` مع إكرامية ${tip} د.ع`;
-                showNotification(msg);
+                showToast(msg);
                 historyData.push(`رحلة تكسي من (${p}) إلى (${d}) ${note ? '[ملاحظة: '+note+']' : ''}`);
                 loyaltyPoints += 15;
                 updateLoyaltyUI();
                 updateHistoryUI();
                 showSection('tracking-section');
-            } else { alert('يرجى تحديد الانطلاق والوجهة.'); }
+            } else { showToast('يرجى تحديد الانطلاق والوجهة.'); }
         }
 
         function checkout() {
             triggerVibration();
-            if (cart.length === 0) { alert('السلة فارغة!'); return; }
+            if (cart.length === 0) { showToast('السلة فارغة!'); return; }
             let total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+            const foodNote = document.getElementById('food-special-note').value.trim();
             if (discountRate > 0) total = total * (1 - discountRate);
             total = Math.round(total);
+            
             if (walletBalance >= total) {
                 walletBalance -= total;
                 document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
-                showNotification('تم الدفع وتأكيد الطلب بنجاح!');
-                historyData.push(`طلب مطاعم بقيمة ${total.toLocaleString()} د.ع`);
+                walletLogData.push(`- خصم طلب مطاعم: ${total.toLocaleString()} د.ع`);
+                updateWalletLogUI();
+
+                showToast('تم الدفع وتأكيد الطلب بنجاح!');
+                historyData.push(`طلب مطاعم بقيمة ${total.toLocaleString()} د.ع ${foodNote ? '[ملاحظة: '+foodNote+']' : ''}`);
                 loyaltyPoints += 25;
                 updateLoyaltyUI();
                 updateHistoryUI();
@@ -459,7 +505,7 @@
                 updateCartUI();
                 showSection('receipt-section');
             } else {
-                alert('رصيد المحفظة غير كافٍ!');
+                showToast('رصيد المحفظة غير كافٍ!');
                 showSection('wallet-section');
             }
         }
@@ -467,9 +513,14 @@
         function cancelActiveOrder() {
             triggerVibration();
             if (confirm('هل أنت متأكد من رغبتك بإلغاء الطلب/الرحلة؟')) {
-                showNotification('تم إلغاء الطلب بنجاح.');
+                showToast('تم إلغاء الطلب بنجاح.');
                 showSection('home-section');
             }
+        }
+
+        function shareLiveCoordinates() {
+            triggerVibration();
+            showToast('تم نسخ إحداثياتك الحية ومشاركتها مع الكابتن بنجاح!');
         }
 
         function shareTripViaWhatsApp() {
@@ -487,11 +538,22 @@
             triggerVibration();
             walletBalance += 10000;
             document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
-            showNotification('تم شحن المحفظة بـ 10,000 د.ع بنجاح!');
+            walletLogData.push("+ شحن محفظة: 10,000 د.ع");
+            updateWalletLogUI();
+            showToast('تم شحن المحفظة بـ 10,000 د.ع بنجاح!');
         }
 
-        function saveProfile() { triggerVibration(); showNotification('تم حفظ بيانات الحساب بنجاح!'); }
-        function rateService() { triggerVibration(); alert('شكراً لتقييمك!'); }
+        function updateWalletLogUI() {
+            const logContainer = document.getElementById('wallet-log');
+            let html = '';
+            walletLogData.forEach(item => {
+                html += `<p style="margin: 2px 0;">${item}</p>`;
+            });
+            logContainer.innerHTML = html;
+        }
+
+        function saveProfile() { triggerVibration(); showToast('تم حفظ بيانات الحساب بنجاح!'); }
+        function rateService() { triggerVibration(); showToast('شكراً لتقييمك!'); }
 
         function sendChatMessage() {
             triggerVibration();
@@ -508,30 +570,21 @@
             }
         }
 
-        // محاكاة حركة أسطول السيارات والدراجات افتراضياً على خريطة التتبع
         function startFleetSimulation() {
             const car1 = document.getElementById('fleet-car-1');
             const bike1 = document.getElementById('fleet-bike-1');
-            const car2 = document.getElementById('fleet-car-2');
-            
-            if (!car1 || !bike1 || !car2) return;
+            if (!car1 || !bike1) return;
 
             fleetInterval = setInterval(() => {
-                // تحريك عشوائي واقعي للأيقونات ضمن الخريطة الوهمية
-                let randomX1 = Math.floor(Math.random() * 70) + 10;
-                let randomY1 = Math.floor(Math.random() * 60) + 15;
-                
-                let randomX2 = Math.floor(Math.random() * 70) + 10;
-                let randomY2 = Math.floor(Math.random() * 60) + 15;
+                let rx1 = Math.floor(Math.random() * 70) + 10;
+                let ry1 = Math.floor(Math.random() * 60) + 15;
+                let rx2 = Math.floor(Math.random() * 70) + 10;
+                let ry2 = Math.floor(Math.random() * 60) + 15;
 
-                car1.style.left = randomX1 + '%';
-                car1.style.top = randomY1 + '%';
-
-                bike1.style.left = randomX2 + '%';
-                bike1.style.bottom = randomY2 + '%';
-
-                car2.style.left = (randomX1 + 20) % 80 + '%';
-                car2.style.top = (randomY2 + 10) % 70 + '%';
+                car1.style.left = rx1 + '%';
+                car1.style.top = ry1 + '%';
+                bike1.style.left = rx2 + '%';
+                bike1.style.bottom = ry2 + '%';
             }, 2000);
         }
 
@@ -557,10 +610,13 @@
             container.innerHTML = html;
         }
 
-        function showNotification(msg) {
-            const alertBox = document.getElementById('live-alert');
-            alertBox.innerText = msg;
-            setTimeout(() => { alertBox.innerText = '👋 أهلاً بك في بصراوي! استمتع بأقوى الخدمات الذكية في البصرة.'; }, 4000);
+        function showToast(msg) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast-msg';
+            toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3500);
         }
     </script>
 </body>
