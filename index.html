@@ -7,29 +7,51 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#006400">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f4f7f6; color: #333; padding-bottom: 70px; }
-        header { background: linear-gradient(135deg, #006400, #228B22); color: white; padding: 25px 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; }
-        .app-logo { width: 70px; height: 70px; background: white; color: #006400; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-        header h1 { font-size: 24px; margin-bottom: 5px; }
-        header p { font-size: 14px; opacity: 0.9; }
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #006400;
+            --secondary-color: #228B22;
+            --border-color: #eee;
+        }
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #f4f7f6;
+            --primary-color: #00aa00;
+            --secondary-color: #008800;
+            --border-color: #333333;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background 0.3s, color 0.3s; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding-bottom: 80px; }
+        header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; position: relative; }
+        .top-controls { position: absolute; top: 15px; left: 15px; display: flex; gap: 10px; }
+        .icon-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 20px; cursor: pointer; font-size: 14px; }
+        .app-logo { width: 65px; height: 65px; background: white; color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 15px; margin-bottom: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        header h1 { font-size: 22px; margin-bottom: 2px; }
+        header p { font-size: 13px; opacity: 0.9; }
         .container { padding: 15px; max-width: 600px; margin: auto; }
-        .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
-        .card { background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s; }
+        .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 15px; }
+        .card { background: var(--card-bg); color: var(--text-color); padding: 18px; border-radius: 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); cursor: pointer; border: 1px solid var(--border-color); }
         .card:active { transform: scale(0.96); }
-        .card h3 { margin-top: 10px; color: #006400; font-size: 16px; }
-        .icon { font-size: 32px; }
-        .section { display: none; margin-top: 20px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .card h3 { margin-top: 8px; color: var(--primary-color); font-size: 15px; }
+        .icon { font-size: 30px; }
+        .section { display: none; margin-top: 15px; background: var(--card-bg); color: var(--text-color); padding: 18px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
         .section.active { display: block; }
-        .btn { background: #228B22; color: white; border: none; padding: 10px 20px; border-radius: 8px; width: 100%; font-size: 16px; margin-top: 10px; cursor: pointer; }
-        .back-btn { background: #6c757d; margin-bottom: 15px; }
-        input, select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
-        .restaurant-item { padding: 12px; border: 1px solid #eee; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .btn { background: var(--secondary-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; width: 100%; font-size: 15px; margin-top: 10px; cursor: pointer; font-weight: bold; }
+        .back-btn { background: #6c757d; margin-bottom: 12px; }
+        input, select { width: 100%; padding: 10px; margin: 6px 0; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); border-radius: 8px; font-size: 14px; }
+        .restaurant-item { padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
-<body>
+<body data-theme="light">
 
     <header>
+        <div class="top-controls">
+            <button class="icon-btn" onclick="toggleDarkMode()">🌙 ليلي</button>
+            <button class="icon-btn" onclick="showSection('cart-section')">🛒 السلة (<span id="cart-count">0</span>)</button>
+        </div>
         <div class="app-logo">بصراوي</div>
         <h1>Basrawi</h1>
         <p>تطبيقك الشامل في عاصمة البصرة الحبيبة</p>
@@ -38,7 +60,7 @@
     <div class="container">
         <!-- الرئيسية -->
         <div id="home-section" class="section active">
-            <h2 style="font-size: 18px; margin-bottom: 10px;">أهلاً بك، ماذا ترغب أن تطلب اليوم؟</h2>
+            <h2 style="font-size: 17px; margin-bottom: 10px;">أهلاً بك، ماذا ترغب أن تطلب اليوم؟</h2>
             <div class="services-grid">
                 <div class="card" onclick="showSection('taxi-section')">
                     <div class="icon">🚕</div>
@@ -52,9 +74,9 @@
                     <div class="icon">📍</div>
                     <h3>تتبع الطلب</h3>
                 </div>
-                <div class="card" onclick="alert('خدمة التوصيل واللوجستيات قريباً في عموم البصرة!')">
-                    <div class="icon">📦</div>
-                    <h3>توصيل اغراض</h3>
+                <div class="card" onclick="showSection('history-section')">
+                    <div class="icon">📜</div>
+                    <h3>سجل الطلبات</h3>
                 </div>
             </div>
         </div>
@@ -62,8 +84,11 @@
         <div id="taxi-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>حجز رحلة تكسي</h2>
-            <input type="text" id="pickup" placeholder="موقع الانطلاق (مثلاً: العشار، الجنينة..)">
-            <input type="text" id="destination" placeholder="وجهة الوصول (مثلاً: المعقل، البرضعة..)">
+            <div style="display: flex; gap: 5px;">
+                <input type="text" id="pickup" placeholder="موقع الانطلاق (العشار، الجنينة..)" style="flex: 1;">
+                <button class="btn" style="width: auto; margin-top: 6px;" onclick="getGPSLocation()">📍 GPS</button>
+            </div>
+            <input type="text" id="destination" placeholder="وجهة الوصول (المعقل، البرضعة..)">
             <button class="btn" onclick="bookTaxi()">اطلب الكابتن الآن</button>
         </div>
 
@@ -71,52 +96,150 @@
         <div id="restaurants-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>مطاعم البصرة</h2>
-            <div style="margin-top: 15px;">
+            <div style="margin-top: 12px;">
                 <div class="restaurant-item">
                     <div>
                         <strong>مطعم الشطيطة الأصيل</strong>
-                        <p style="font-size: 12px; color: #666;">مشاوي وعصائر - توصيل سريع</p>
+                        <p style="font-size: 11px; opacity: 0.7;">مشاوي وعصائر - 7,000 د.ع</p>
                     </div>
-                    <button class="btn" style="width: auto; padding: 6px 12px; margin: 0;" onclick="addToCart('مشاوي الشطيطة')">اطلب</button>
+                    <button class="btn" style="width: auto; padding: 6px 12px; margin: 0;" onclick="addToCart('مشاوي الشطيطة', 7000)">إضافة</button>
                 </div>
                 <div class="restaurant-item">
                     <div>
                         <strong>برجر البصرة</strong>
-                        <p style="font-size: 12px; color: #666;">وجبات سريعة ولذيذة</p>
+                        <p style="font-size: 11px; opacity: 0.7;">وجبة دبل - 5,000 د.ع</p>
                     </div>
-                    <button class="btn" style="width: auto; padding: 6px 12px; margin: 0;" onclick="addToCart('وجبة برجر')">اطلب</button>
+                    <button class="btn" style="width: auto; padding: 6px 12px; margin: 0;" onclick="addToCart('وجبة برجر', 5000)">إضافة</button>
                 </div>
             </div>
         </div>
 
+        <!-- قسم سلة التسوق -->
+        <div id="cart-section" class="section">
+            <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
+            <h2>سلة الطلبات</h2>
+            <div id="cart-items" style="margin: 10px 0; max-height: 150px; overflow-y: auto;">
+                <p style="text-align: center; opacity: 0.6; padding: 15px;">السلة فارغة حالياً</p>
+            </div>
+            <hr style="border-color: var(--border-color); margin: 10px 0;">
+            <p style="font-weight: bold;">المجموع الكلي: <span id="cart-total">0</span> د.ع</p>
+            <button class="btn" onclick="checkout()">تأكيد وإرسال الطلب</button>
+        </div>
         <!-- قسم التتبع -->
         <div id="tracking-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>تتبع رحلتك أو طلبك</h2>
-            <p style="margin-top: 10px; color: #666;">الكابتن في طريقه إليك، المسافة المتبقية: <strong style="color: #006400;">1.5 كم</strong></p>
-            <div style="background: #e9ecef; height: 160px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-top: 15px; font-weight: bold; color: #555;">
-                🗺️ [خريطة شوارع البصرة الحية]
+            <p style="margin-top: 10px;">الكابتن في طريقه إليك، المسافة: <strong style="color: var(--secondary-color);">1.2 كم</strong></p>
+            <div style="background: rgba(0,0,0,0.05); height: 140px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 12px; font-weight: bold;">
+                <span>🗺️ [خريطة شوارع البصرة الحية]</span>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="btn" style="width: auto; padding: 5px 10px; background: #25d366; margin: 0;" onclick="alert('جاري فتح واتساب الكابتن...')">💬 مراسلة</button>
+                    <button class="btn" style="width: auto; padding: 5px 10px; background: #007bff; margin: 0;" onclick="alert('جاري الاتصال بالكابتن...')">📞 اتصال</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم سجل الطلبات -->
+        <div id="history-section" class="section">
+            <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
+            <h2>سجل الطلبات والرحلات</h2>
+            <div id="history-list" style="margin-top: 10px;">
+                <p style="text-align: center; opacity: 0.6; padding: 15px;">لا توجد طلبات سابقة مسجلة</p>
             </div>
         </div>
     </div>
 
     <script>
+        let cart = [];
+        let historyData = [];
+
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
         }
+
+        function toggleDarkMode() {
+            const body = document.body;
+            if (body.getAttribute('data-theme') === 'light') {
+                body.setAttribute('data-theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+            }
+        }
+
+        function getGPSLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    document.getElementById('pickup').value = `موقعي الحالي (خط العرض: ${position.coords.latitude.toFixed(2)})`;
+                }, () => {
+                    alert('تعذر تحديد الموقع تلقائياً، يرجى كتابته يدوياً.');
+                });
+            } else {
+                alert('خدمة تحديد الموقع غير مدعومة في متصفحك.');
+            }
+        }
+
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            updateCartUI();
+            alert(`تم إضافة (${name}) إلى السلة بنجاح!`);
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+            const container = document.getElementById('cart-items');
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="text-align: center; opacity: 0.6; padding: 15px;">السلة فارغة حالياً</p>';
+                document.getElementById('cart-total').innerText = '0';
+                return;
+            }
+            let html = '';
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                html += `<div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--border-color);">
+                    <span>${item.name}</span>
+                    <span>${item.price} د.ع</span>
+                </div>`;
+            });
+            container.innerHTML = html;
+            document.getElementById('cart-total').innerText = total;
+        }
+
         function bookTaxi() {
             const p = document.getElementById('pickup').value;
             const d = document.getElementById('destination').value;
             if(p && d) {
-                alert('تم إرسال طلبك بنجاح! جاري البحث عن أقرب كابتن في البصرة...');
+                alert('تم إرسال طلب التكسي بنجاح!');
+                historyData.push(`رحلة تكسي من (${p}) إلى (${d})`);
+                updateHistoryUI();
                 showSection('tracking-section');
             } else {
-                alert('يرجى كتابة مكان الانطلاق والوجهة لطفاً.');
+                alert('يرجى تحديد مكان الانطلاق والوجهة لطفاً.');
             }
         }
-        function addToCart(itemName) {
-            alert('تم إضافة الطلب إلى سلة الطلبات بنجاح!');
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('السلة فارغة!');
+                return;
+            }
+            alert('تم تأكيد طلبك بنجاح وجاري تحضيره في البصرة!');
+            historyData.push(`طلب مطاعم يضم ${cart.length} مواد`);
+            updateHistoryUI();
+            cart = [];
+            updateCartUI();
+            showSection('tracking-section');
+        }
+
+        function updateHistoryUI() {
+            const container = document.getElementById('history-list');
+            if (historyData.length === 0) return;
+            let html = '';
+            historyData.forEach(h => {
+                html += `<div style="padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 8px; font-size: 13px;">✅ ${h}</div>`;
+            });
+            container.innerHTML = html;
         }
     </script>
 </body>
