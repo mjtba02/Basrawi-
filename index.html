@@ -26,12 +26,10 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background 0.3s, color 0.3s; }
         body { background-color: var(--bg-color); color: var(--text-color); padding-bottom: 80px; }
         
-        /* شاشة التحميل والترحيل (Splash Screen) */
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s ease; }
         .splash-logo { width: 90px; height: 90px; background: white; color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 22px; margin-bottom: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.3); animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
 
-        /* إشعارات الـ Toast العصرية */
         #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 8px; width: 90%; max-width: 400px; pointer-events: none; }
         .toast-msg { background: rgba(0, 0, 0, 0.85); color: white; padding: 12px 18px; border-radius: 10px; font-size: 13px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); animation: fadeInOut 3.5s forwards; pointer-events: auto; }
         @keyframes fadeInOut { 0% { opacity: 0; transform: translateY(-20px); } 15% { opacity: 1; transform: translateY(0); } 85% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
@@ -59,14 +57,12 @@
 </head>
 <body data-theme="light">
 
-    <!-- شاشة الترحيل الذكية -->
     <div id="splash-screen">
         <div class="splash-logo">بصراوي</div>
         <h2>Basrawi Super-App</h2>
         <p style="font-size: 13px; opacity: 0.8; margin-top: 5px;">جاري تحميل عاصمة البصرة...</p>
     </div>
 
-    <!-- صندوق الإشعارات الحية -->
     <div id="toast-container"></div>
 
     <header>
@@ -161,10 +157,10 @@
             <button class="btn" onclick="bookTaxi()">اطلب الكابتن الآن</button>
         </div>
 
-        <!-- قسم المطاعم مع ملاحظات الطلب -->
+        <!-- قسم المطاعم مع المفضلة (❤️) -->
         <div id="restaurants-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
-            <h2>مطاعم البصرة</h2>
+            <h2>مطاعم البصرة والمفضلة ❤️</h2>
             <select id="food-filter" onchange="filterRestaurants()" style="margin: 10px 0;">
                 <option value="all">جميع التصنيفات</option>
                 <option value="grill">مشاوي بصرية</option>
@@ -172,7 +168,7 @@
                 <option value="juice">عصائر ومثلجات</option>
             </select>
             
-            <textarea id="food-special-note" placeholder="ملاحظات خاصة للطعام (مثلاً: بدون بصل، حار جداً..)" style="margin-bottom: 10px; height: 50px; font-size: 12px;"></textarea>
+            <textarea id="food-special-note" placeholder="ملاحظات خاصة للطعام (بدون بصل، حار..)" style="margin-bottom: 10px; height: 45px; font-size: 12px;"></textarea>
 
             <div id="restaurants-list" style="margin-top: 5px;">
                 <div class="restaurant-item" data-category="grill">
@@ -180,21 +176,30 @@
                         <strong>مطعم الشطيطة الأصيل</strong>
                         <p style="font-size: 11px; opacity: 0.7;">مشاوي - 7,000 د.ع</p>
                     </div>
-                    <button class="btn" style="width: auto; padding: 6px 12px; margin: 0;" onclick="addToCart('مشاوي الشطيطة', 7000)">إضافة</button>
+                    <div style="display: flex; gap: 5px; align-items: center;">
+                        <span onclick="toggleFavorite(this, 'مشاوي الشطيطة')" style="cursor: pointer; font-size: 16px;">🤍</span>
+                        <button class="btn" style="width: auto; padding: 6px 12px; margin: 0;" onclick="addToCart('مشاوي الشطيطة', 7000)">إضافة</button>
+                    </div>
                 </div>
                 <div class="restaurant-item" data-category="fastfood">
                     <div>
                         <strong>برجر البصرة</strong>
                         <p style="font-size: 11px; opacity: 0.7;">وجبة دبل - 5,000 د.ع</p>
                     </div>
-                    <button class="btn" style="width: auto; padding: 6px 12px; margin: 0;" onclick="addToCart('وجبة برجر', 5000)">إضافة</button>
+                    <div style="display: flex; gap: 5px; align-items: center;">
+                        <span onclick="toggleFavorite(this, 'برجر البصرة')" style="cursor: pointer; font-size: 16px;">🤍</span>
+                        <button class="btn" style="width: auto; padding: 6px 12px; margin: 0;" onclick="addToCart('وجبة برجر', 5000)">إضافة</button>
+                    </div>
                 </div>
                 <div class="restaurant-item" data-category="juice">
                     <div>
                         <strong>عصائر المعقل الشهيرة</strong>
                         <p style="font-size: 11px; opacity: 0.7;">عصير طبيعي - 3,000 د.ع</p>
                     </div>
-                    <button class="btn" style="width: auto; padding: 6px 12px; margin: 0;" onclick="addToCart('عصير طبيعي', 3000)">إضافة</button>
+                    <div style="display: flex; gap: 5px; align-items: center;">
+                        <span onclick="toggleFavorite(this, 'عصائر المعقل')" style="cursor: pointer; font-size: 16px;">🤍</span>
+                        <button class="btn" style="width: auto; padding: 6px 12px; margin: 0;" onclick="addToCart('عصير طبيعي', 3000)">إضافة</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -214,7 +219,7 @@
             <p style="font-weight: bold;">المجموع النهائي: <span id="cart-total">0</span> د.ع</p>
             <button class="btn" onclick="checkout()">تأكيد وإرسال الطلب</button>
         </div>
-        <!-- قسم المحفظة مع سجل العمليات المالية -->
+        <!-- قسم المحفظة مع سجل الحركات بالوقت والتاريخ -->
         <div id="wallet-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>محفظة بصراوي 💰</h2>
@@ -224,9 +229,9 @@
             </div>
             <button class="btn" onclick="rechargeWallet()">شحن المحفظة بـ 10,000 د.ع</button>
             
-            <h3 style="font-size: 14px; margin-top: 15px; margin-bottom: 5px;">📜 سجل المعاملات المالية:</h3>
-            <div id="wallet-log" style="background: rgba(0,0,0,0.03); padding: 10px; border-radius: 8px; max-height: 100px; overflow-y: auto; font-size: 12px;">
-                <p style="color: #666;">+ شحن افتراضي: 15,000 د.ع</p>
+            <h3 style="font-size: 14px; margin-top: 15px; margin-bottom: 5px;">📜 سجل المعاملات المالية (بالوقت):</h3>
+            <div id="wallet-log" style="background: rgba(0,0,0,0.03); padding: 10px; border-radius: 8px; max-height: 110px; overflow-y: auto; font-size: 11px;">
+                <p style="color: #666;">+ إيداع افتراضي: 15,000 د.ع</p>
             </div>
         </div>
 
@@ -240,24 +245,25 @@
             <button class="btn" onclick="saveProfile()">حفظ التعديلات</button>
         </div>
 
-        <!-- قسم التتبع مع مشاركة الإحداثيات الحية -->
+        <!-- قسم التتبع مع العداد التنازلي الحقيقي للوصول (ETA) -->
         <div id="tracking-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>تتبع رحلتك أو طلبك النشط</h2>
-            <p style="margin-top: 10px;">حالة الطلب: <strong id="order-status-text" style="color: var(--secondary-color);">الكابتن في الطريق إليك</strong></p>
+            <p style="margin-top: 8px;">حالة الطلب: <strong id="order-status-text" style="color: var(--secondary-color);">الكابتن في الطريق إليك</strong></p>
+            <p style="font-size: 13px; margin-top: 4px; background: rgba(0,100,0,0.08); padding: 6px; border-radius: 6px; text-align: center;">⏳ الوقت المتوقع للوصول (ETA): <strong id="eta-countdown" style="color: var(--primary-color);">04:50 دقيقة</strong></p>
             
-            <div style="background: rgba(0,0,0,0.05); height: 160px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; position: relative; overflow: hidden; border: 1px solid var(--border-color);">
+            <div style="background: rgba(0,0,0,0.05); height: 140px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; position: relative; overflow: hidden; border: 1px solid var(--border-color);">
                 <div style="position: absolute; width: 100%; height: 2px; background: rgba(0,100,0,0.2); top: 50%;"></div>
                 <div style="position: absolute; height: 100%; width: 2px; background: rgba(0,100,0,0.2); left: 50%;"></div>
                 
                 <div id="fleet-car-1" style="position: absolute; top: 20%; left: 10%; font-size: 20px; transition: all 1.5s linear;">🚕</div>
                 <div id="fleet-bike-1" style="position: absolute; bottom: 25%; left: 70%; font-size: 20px; transition: all 1.5s linear;">🛵</div>
 
-                <span style="z-index: 2; background: rgba(255,255,255,0.8); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; color: var(--primary-color);">🗺️ خريطة البصرة الحية (أسطول بصراوي)</span>
+                <span style="z-index: 2; background: rgba(255,255,255,0.8); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; color: var(--primary-color);">🗺️ خريطة البصرة الحية</span>
             </div>
 
             <div style="display: flex; gap: 5px; margin-top: 10px;">
-                <button class="btn" style="background: #007bff; margin: 0; padding: 8px; font-size: 12px; flex: 1;" onclick="shareLiveCoordinates()">📍 مشاركة إحداثياتي</button>
+                <button class="btn" style="background: #007bff; margin: 0; padding: 8px; font-size: 12px; flex: 1;" onclick="shareLiveCoordinates()">📍 إحداثياتي</button>
                 <button class="btn" style="background: #25d366; margin: 0; padding: 8px; font-size: 12px; flex: 1;" onclick="shareTripViaWhatsApp()">📤 واتساب</button>
                 <button class="btn" style="background: #dc3545; margin: 0; padding: 8px; font-size: 12px; flex: 1;" onclick="cancelActiveOrder()">إلغاء</button>
             </div>
@@ -304,11 +310,12 @@
     <script>
         let cart = [];
         let historyData = [];
-        let walletLogData = ["+ إيداع افتراضي: 15,000 د.ع"];
+        let walletLogData = [`[${getCurrentTimeString()}] + إيداع افتراضي: 15,000 د.ع`];
         let walletBalance = 15000;
         let loyaltyPoints = 120;
         let discountRate = 0;
         let fleetInterval = null;
+        let etaTimer = null;
 
         const translations = {
             ar: { title: "Basrawi", subtitle: "تطبيقك الشامل في عاصمة البصرة الحبيبة", whatTodo: "ماذا ترغب أن تطلب اليوم؟", taxi: "حجز تكسي", restaurants: "المطاعم والطعام", tracking: "تتبع الطلب", history: "سجل الطلبات", profile: "حسابي والعناوين", chat: "الدردشة الحية" },
@@ -316,7 +323,12 @@
             ku: { title: "Basrawi", subtitle: "پلاتفۆرمی خزمەتگوزاری لە بصڕە", whatTodo: "ئەمڕۆ چیت دەوێت؟", taxi: "تەکسی", restaurants: "چێشتخانەکان", tracking: "دوایین دۆخ", history: "مێژوو", profile: "هەژمارەکەم", chat: "چاتی ڕاستەوخۆ" }
         };
 
-        // إخفاء شاشة الترحيل وتفعيل الوضع الليلي التلقائي حسب الوقت
+        function getCurrentTimeString() {
+            const now = new Date();
+            return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // إخفاء شاشة التحميل، وضع ليلي تلقائي، وفحص بطارية الهاتف
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
@@ -326,10 +338,18 @@
                 }
             }, 1200);
 
-            // الوضع الليلي التلقائي إذا كانت الساعة بعد 7 مساءً (19:00)
             const currentHour = new Date().getHours();
             if (currentHour >= 19 || currentHour < 6) {
                 document.body.setAttribute('data-theme', 'dark');
+            }
+
+            // فحص حالة بطارية الهاتف (ميزة تنبيه البطارية الضعيفة)
+            if (navigator.getBattery) {
+                navigator.getBattery().then(battery => {
+                    if (battery.level < 0.2 && !battery.charging) {
+                        showToast('⚠️ انتبه: بطارية هاتفك ضعيفة (< 20%). تم تفعيل استهلاك خفيف.');
+                    }
+                });
             }
         });
 
@@ -361,8 +381,10 @@
             
             if (sectionId === 'tracking-section') { 
                 startFleetSimulation(); 
+                startETACountdown(290); // يبدأ من 4 دقائق و 50 ثانية
             } else {
                 stopFleetSimulation();
+                stopETACountdown();
             }
         }
 
@@ -386,6 +408,17 @@
             triggerVibration();
             document.getElementById(fieldId).value = addressText;
             showToast(`تم تحديد عنوان: ${addressText}`);
+        }
+
+        function toggleFavorite(element, itemName) {
+            triggerVibration();
+            if (element.innerText === '🤍') {
+                element.innerText = '❤️';
+                showToast(`تم إضافة (${itemName}) إلى قائمتك المفضلة!`);
+            } else {
+                element.innerText = '🤍';
+                showToast(`تم إزالة (${itemName}) من المفضلة.`);
+            }
         }
 
         function quickOneTapOrder() {
@@ -492,7 +525,7 @@
             if (walletBalance >= total) {
                 walletBalance -= total;
                 document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
-                walletLogData.push(`- خصم طلب مطاعم: ${total.toLocaleString()} د.ع`);
+                walletLogData.push(`[${getCurrentTimeString()}] - خصم طلب مطاعم: ${total.toLocaleString()} د.ع`);
                 updateWalletLogUI();
 
                 showToast('تم الدفع وتأكيد الطلب بنجاح!');
@@ -538,7 +571,7 @@
             triggerVibration();
             walletBalance += 10000;
             document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
-            walletLogData.push("+ شحن محفظة: 10,000 د.ع");
+            walletLogData.push(`[${getCurrentTimeString()}] + شحن محفظة: 10,000 د.ع`);
             updateWalletLogUI();
             showToast('تم شحن المحفظة بـ 10,000 د.ع بنجاح!');
         }
@@ -592,6 +625,32 @@
             if (fleetInterval) {
                 clearInterval(fleetInterval);
                 fleetInterval = null;
+            }
+        }
+
+        // عداد تنازلي حقيقي للوقت المتوقع للوصول (ETA Countdown)
+        function startETACountdown(seconds) {
+            const etaEl = document.getElementById('eta-countdown');
+            if (!etaEl) return;
+            
+            let remaining = seconds;
+            etaTimer = setInterval(() => {
+                if (remaining <= 0) {
+                    etaEl.innerText = "الكابتن وصل الآن! 🚗";
+                    clearInterval(etaTimer);
+                    return;
+                }
+                remaining--;
+                let mins = Math.floor(remaining / 60);
+                let secs = remaining % 60;
+                etaEl.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')} دقيقة`;
+            }, 1000);
+        }
+
+        function stopETACountdown() {
+            if (etaTimer) {
+                clearInterval(etaTimer);
+                etaTimer = null;
             }
         }
 
