@@ -44,6 +44,7 @@
         input, select { width: 100%; padding: 10px; margin: 6px 0; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); border-radius: 8px; font-size: 14px; }
         .restaurant-item { padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .alert-box { background: rgba(0, 100, 0, 0.1); border-right: 4px solid var(--primary-color); padding: 10px; margin-bottom: 12px; border-radius: 5px; font-size: 13px; }
+        .quick-tag { background: rgba(0,100,0,0.1); color: var(--primary-color); padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; display: inline-block; margin-top: 4px; font-weight: bold; }
     </style>
 </head>
 <body data-theme="light">
@@ -101,7 +102,7 @@
                 </div>
             </div>
         </div>
-        <!-- قسم التكسي وحساب التكلفة -->
+        <!-- قسم التكسي مع العناوين السريعة وجدولة الرحلات -->
         <div id="taxi-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>حجز رحلة تكسي</h2>
@@ -109,7 +110,15 @@
                 <input type="text" id="pickup" placeholder="موقع الانطلاق (العشار، الجنينة..)" style="flex: 1;">
                 <button class="btn" style="width: auto; margin-top: 6px;" onclick="getGPSLocation()">📍 GPS</button>
             </div>
-            <input type="text" id="destination" placeholder="وجهة الوصول (المعقل، البرضعة..)" oninput="calculateFare()">
+            <div style="margin-bottom: 5px;">
+                <span class="quick-tag" onclick="setSavedAddress('pickup', 'البيت (الجزائر)')">🏠 البيت</span>
+                <span class="quick-tag" onclick="setSavedAddress('pickup', 'العمل (المعقل)')">💼 العمل</span>
+            </div>
+            <input type="text" id="destination" placeholder="وجهة الوصول.." oninput="calculateFare()">
+            
+            <label style="font-size: 12px; margin-top: 8px; display: block;">⏰ جدولة الرحلة لوقت لاحق (اختياري):</label>
+            <input type="time" id="schedule-time">
+
             <div style="background: rgba(0,0,0,0.03); padding: 10px; border-radius: 8px; margin: 8px 0; font-size: 13px;">
                 <span>الأجرة التقديرية: </span><strong id="fare-price" style="color: var(--secondary-color);">3,000 د.ع</strong>
             </div>
@@ -151,7 +160,7 @@
             </div>
         </div>
 
-        <!-- قسم سلة التسوق مع الخصم -->
+        <!-- قسم سلة التسوق الذكية (+ و - والخصم) -->
         <div id="cart-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>سلة الطلبات والخصومات</h2>
@@ -159,7 +168,7 @@
                 <p style="text-align: center; opacity: 0.6; padding: 15px;">السلة فارغة حالياً</p>
             </div>
             <div style="display: flex; gap: 5px; margin: 10px 0;">
-                <input type="text" id="promo-code" placeholder="أدخل كود الخصم (مثل BASRA)" style="margin:0; flex: 1;">
+                <input type="text" id="promo-code" placeholder="كود الخصم (BASRA)" style="margin:0; flex: 1;">
                 <button class="btn" style="width: auto; margin: 0; padding: 8px 12px;" onclick="applyPromo()">تطبيق</button>
             </div>
             <hr style="border-color: var(--border-color); margin: 10px 0;">
@@ -180,26 +189,38 @@
         <!-- قسم الملف الشخصي -->
         <div id="profile-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
-            <h2>الملف الشخصي والعناوين</h2>
+            <h2>الملف الشخصي والعناوين المفضلة</h2>
             <input type="text" id="user-name" value="مجتبى مازن" placeholder="الاسم الكامل">
             <input type="text" id="user-phone" value="07700000000" placeholder="رقم الهاتف">
-            <input type="text" id="user-address" value="البصرة - الجزائر" placeholder="العنوان المفضلة">
+            <input type="text" id="user-address" value="البصرة - الجزائر" placeholder="عنوان البيت الأساسي">
             <button class="btn" onclick="saveProfile()">حفظ التعديلات</button>
         </div>
 
-        <!-- قسم التتبع والخريطة المتحركة -->
+        <!-- قسم التتبع، الخريطة المتحركة وإلغاء الطلب -->
         <div id="tracking-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>تتبع رحلتك أو طلبك</h2>
             <p style="margin-top: 10px;">حالة الطلب: <strong id="order-status-text" style="color: var(--secondary-color);">الكابتن في طريقه إليك</strong></p>
-            <div style="background: rgba(0,0,0,0.05); height: 150px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 12px; position: relative; overflow: hidden;">
+            <div style="background: rgba(0,0,0,0.05); height: 140px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; position: relative; overflow: hidden;">
                 <div id="moving-map-icon" style="position: absolute; left: 10%; font-size: 24px; transition: left 1s linear;">🚗</div>
-                <span style="z-index: 2; margin-top: 40px; font-weight: bold;">🗺️ [خريطة شوارع البصرة الحية]</span>
+                <span style="z-index: 2; margin-top: 35px; font-weight: bold;">🗺️ [خريطة شوارع البصرة الحية]</span>
             </div>
-            <div style="margin-top: 15px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 10px;">
-                <p style="font-size: 13px; margin-bottom: 5px;">قيم تجربتك:</p>
-                <div style="font-size: 22px; cursor: pointer;" onclick="rateService()">⭐ ⭐ ⭐ ⭐ ⭐</div>
+            <button class="btn" style="background: #dc3545; margin-top: 10px; padding: 6px;" onclick="cancelActiveOrder()">إلغاء الطلب / الرحلة</button>
+            <div style="margin-top: 12px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 8px;">
+                <p style="font-size: 12px; margin-bottom: 3px;">قيم تجربتك:</p>
+                <div style="font-size: 20px; cursor: pointer;" onclick="rateService()">⭐ ⭐ ⭐ ⭐ ⭐</div>
             </div>
+        </div>
+
+        <!-- قسم الإيصال الرقمي للفاتورة -->
+        <div id="receipt-section" class="section">
+            <button class="btn back-btn" onclick="showSection('home-section')">الرئيسية</button>
+            <h2>🧾 إيصال الدفع الرقمي</h2>
+            <div id="receipt-content" style="background: rgba(0,0,0,0.03); padding: 12px; border-radius: 8px; margin: 10px 0; font-size: 13px;">
+                <p>رقم الإيصال: #BAS-9821</p>
+                <p>الحالة: مدفوع بنجاح عبر محفظة بصراوي</p>
+            </div>
+            <button class="btn" onclick="showSection('home-section')">تم، العودة للرئيسية</button>
         </div>
 
         <!-- قسم الدردشة الحية -->
@@ -215,7 +236,7 @@
             </div>
         </div>
 
-        <!-- قسم سجل الطلبات -->
+        <!-- قسم سجل الطلبات مع ميزة (إعادة الطلب) -->
         <div id="history-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>سجل الطلبات والرحلات</h2>
@@ -256,9 +277,7 @@
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
-            if (sectionId === 'tracking-section') {
-                startMovingMap();
-            }
+            if (sectionId === 'tracking-section') { startMovingMap(); }
         }
 
         function toggleDarkMode() {
@@ -273,6 +292,11 @@
                     showNotification('تم تحديث موقعك عبر الـ GPS بنجاح!');
                 }, () => { alert('تعذر تحديد الموقع.'); });
             } else { alert('الـ GPS غير مدعوم.'); }
+        }
+
+        function setSavedAddress(fieldId, addressText) {
+            document.getElementById(fieldId).value = addressText;
+            showNotification(`تم تحديد عنوان: ${addressText}`);
         }
 
         function calculateFare() {
@@ -291,24 +315,36 @@
         }
 
         function addToCart(name, price) {
-            cart.push({ name, price });
+            let existing = cart.find(item => item.name === name);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ name, price, qty: 1 });
+            }
             updateCartUI();
             showNotification(`تم إضافة (${name}) للسلة!`);
+        }
+
+        function changeQty(index, delta) {
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) {
+                cart.splice(index, 1);
+            }
+            updateCartUI();
         }
 
         function applyPromo() {
             const code = document.getElementById('promo-code').value.trim();
             if (code.toUpperCase() === 'BASRA') {
-                discountRate = 0.2; // 20% خصم
+                discountRate = 0.2;
                 showNotification('تم تطبيق كود الخصم (BASRA) بنجاح (-20%)!');
                 updateCartUI();
-            } else {
-                alert('كود الخصم غير صحيح!');
-            }
+            } else { alert('كود الخصم غير صحيح!'); }
         }
 
         function updateCartUI() {
-            document.getElementById('cart-count').innerText = cart.length;
+            let totalCount = cart.reduce((sum, i) => sum + i.qty, 0);
+            document.getElementById('cart-count').innerText = totalCount;
             const container = document.getElementById('cart-items');
             if (cart.length === 0) {
                 container.innerHTML = '<p style="text-align: center; opacity: 0.6; padding: 15px;">السلة فارغة حالياً</p>';
@@ -317,14 +353,18 @@
             }
             let html = '';
             let total = 0;
-            cart.forEach(item => { total += item.price; });
-            if (discountRate > 0) total = total * (1 - discountRate);
-            cart.forEach(item => {
-                html += `<div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--border-color);">
-                    <span>${item.name}</span>
-                    <span>${item.price.toLocaleString()} د.ع</span>
+            cart.forEach((item, index) => {
+                total += (item.price * item.qty);
+                html += `<div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border-color); font-size: 13px;">
+                    <span>${item.name} (${item.price} د.ع)</span>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <button onclick="changeQty(${index}, -1)" style="padding: 2px 6px; background: #dc3545; color: white; border: none; border-radius: 4px;">-</button>
+                        <span>${item.qty}</span>
+                        <button onclick="changeQty(${index}, 1)" style="padding: 2px 6px; background: #28a745; color: white; border: none; border-radius: 4px;">+</button>
+                    </div>
                 </div>`;
             });
+            if (discountRate > 0) total = total * (1 - discountRate);
             container.innerHTML = html;
             document.getElementById('cart-total').innerText = Math.round(total).toLocaleString();
         }
@@ -332,9 +372,11 @@
         function bookTaxi() {
             const p = document.getElementById('pickup').value;
             const d = document.getElementById('destination').value;
+            const time = document.getElementById('schedule-time').value;
             if(p && d) {
-                showNotification('تم طلب الكابتن بنجاح!');
-                historyData.push(`رحلة تكسي من (${p}) إلى (${d})`);
+                let msg = time ? `تم جدولة رحلة تكسي الساعة (${time})` : 'تم طلب الكابتن الفوري بنجاح!';
+                showNotification(msg);
+                historyData.push(`رحلة تكسي من (${p}) إلى (${d}) ${time ? '[مجدولة: '+time+']' : ''}`);
                 loyaltyPoints += 15;
                 updateLoyaltyUI();
                 updateHistoryUI();
@@ -344,7 +386,7 @@
 
         function checkout() {
             if (cart.length === 0) { alert('السلة فارغة!'); return; }
-            let total = cart.reduce((sum, i) => sum + i.price, 0);
+            let total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
             if (discountRate > 0) total = total * (1 - discountRate);
             total = Math.round(total);
             if (walletBalance >= total) {
@@ -358,17 +400,29 @@
                 cart = [];
                 discountRate = 0;
                 updateCartUI();
-                showSection('tracking-section');
+                showSection('receipt-section');
             } else {
                 alert('رصيد المحفظة غير كافٍ!');
                 showSection('wallet-section');
             }
         }
 
+        function cancelActiveOrder() {
+            if (confirm('هل أنت متأكد من رغبتك بإلغاء الطلب/الرحلة؟')) {
+                showNotification('تم إلغاء الطلب بنجاح.');
+                showSection('home-section');
+            }
+        }
+
+        function reorderItem(itemName) {
+            addToCart(itemName, 5000);
+            showSection('cart-section');
+        }
+
         function rechargeWallet() {
             walletBalance += 10000;
             document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
-            showNotification('تم شحن المحفظة بنجاح بـ 10,000 د.ع!');
+            showNotification('تم شحن المحفظة بـ 10,000 د.ع بنجاح!');
         }
 
         function saveProfile() { showNotification('تم حفظ بيانات الحساب بنجاح!'); }
@@ -404,7 +458,12 @@
             const container = document.getElementById('history-list');
             if (historyData.length === 0) return;
             let html = '';
-            historyData.forEach(h => { html += `<div style="padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 8px; font-size: 13px;">✅ ${h}</div>`; });
+            historyData.forEach(h => { 
+                html += `<div style="padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 8px; font-size: 13px; display: flex; justify-content: space-between; align-items: center;">
+                    <span>✅ ${h}</span>
+                    <button onclick="reorderItem('${h}')" style="padding: 4px 8px; background: var(--secondary-color); color: white; border: none; border-radius: 4px; font-size: 11px; cursor: pointer;">إعادة طلب</button>
+                </div>`; 
+            });
             container.innerHTML = html;
         }
 
