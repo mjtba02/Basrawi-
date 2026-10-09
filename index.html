@@ -26,31 +26,33 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background 0.3s, color 0.3s; }
         body { background-color: var(--bg-color); color: var(--text-color); padding-bottom: 80px; }
         header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; position: relative; }
-        .top-controls { position: absolute; top: 15px; left: 15px; display: flex; gap: 10px; }
-        .icon-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 20px; cursor: pointer; font-size: 14px; }
-        .app-logo { width: 65px; height: 65px; background: white; color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 15px; margin-bottom: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-        header h1 { font-size: 22px; margin-bottom: 2px; }
-        header p { font-size: 13px; opacity: 0.9; }
+        .top-controls { position: absolute; top: 15px; left: 15px; display: flex; gap: 8px; }
+        .icon-btn { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 10px; border-radius: 15px; cursor: pointer; font-size: 12px; }
+        .app-logo { width: 60px; height: 60px; background: white; color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; margin-bottom: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        header h1 { font-size: 20px; margin-bottom: 2px; }
+        header p { font-size: 12px; opacity: 0.9; }
         .container { padding: 15px; max-width: 600px; margin: auto; }
         .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 15px; }
-        .card { background: var(--card-bg); color: var(--text-color); padding: 18px; border-radius: 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); cursor: pointer; border: 1px solid var(--border-color); }
+        .card { background: var(--card-bg); color: var(--text-color); padding: 16px; border-radius: 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); cursor: pointer; border: 1px solid var(--border-color); }
         .card:active { transform: scale(0.96); }
-        .card h3 { margin-top: 8px; color: var(--primary-color); font-size: 15px; }
-        .icon { font-size: 30px; }
+        .card h3 { margin-top: 8px; color: var(--primary-color); font-size: 14px; }
+        .icon { font-size: 28px; }
         .section { display: none; margin-top: 15px; background: var(--card-bg); color: var(--text-color); padding: 18px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
         .section.active { display: block; }
         .btn { background: var(--secondary-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; width: 100%; font-size: 15px; margin-top: 10px; cursor: pointer; font-weight: bold; }
         .back-btn { background: #6c757d; margin-bottom: 12px; }
         input, select { width: 100%; padding: 10px; margin: 6px 0; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); border-radius: 8px; font-size: 14px; }
         .restaurant-item { padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .alert-box { background: rgba(0, 100, 0, 0.1); border-right: 4px solid var(--primary-color); padding: 10px; margin-bottom: 12px; border-radius: 5px; font-size: 13px; }
     </style>
 </head>
 <body data-theme="light">
 
     <header>
         <div class="top-controls">
-            <button class="icon-btn" onclick="toggleDarkMode()">🌙 ليلي</button>
-            <button class="icon-btn" onclick="showSection('cart-section')">🛒 السلة (<span id="cart-count">0</span>)</button>
+            <button class="icon-btn" onclick="toggleDarkMode()">🌙</button>
+            <button class="icon-btn" onclick="showSection('cart-section')">🛒(<span id="cart-count">0</span>)</button>
+            <button class="icon-btn" onclick="showSection('wallet-section')">💰 المحفظة</button>
         </div>
         <div class="app-logo">بصراوي</div>
         <h1>Basrawi</h1>
@@ -58,9 +60,12 @@
     </header>
 
     <div class="container">
+        <!-- إشعار تفاعلي فوري -->
+        <div id="live-alert" class="alert-box">👋 أهلاً بك في بصراوي! استمتع بخدمات التكسي والمطاعم في البصرة.</div>
+
         <!-- الرئيسية -->
         <div id="home-section" class="section active">
-            <h2 style="font-size: 17px; margin-bottom: 10px;">أهلاً بك، ماذا ترغب أن تطلب اليوم؟</h2>
+            <h2 style="font-size: 17px; margin-bottom: 10px;">ماذا ترغب أن تطلب اليوم؟</h2>
             <div class="services-grid">
                 <div class="card" onclick="showSection('taxi-section')">
                     <div class="icon">🚕</div>
@@ -78,9 +83,17 @@
                     <div class="icon">📜</div>
                     <h3>سجل الطلبات</h3>
                 </div>
+                <div class="card" onclick="showSection('profile-section')">
+                    <div class="icon">👤</div>
+                    <h3>حسابي والعناوين</h3>
+                </div>
+                <div class="card" onclick="alert('خدمة التوصيل واللوجستيات قريباً في عموم البصرة!')">
+                    <div class="icon">📦</div>
+                    <h3>توصيل اغراض</h3>
+                </div>
             </div>
         </div>
-        <!-- قسم التكسي -->
+        <!-- قسم التكسي وحساب التكلفة -->
         <div id="taxi-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>حجز رحلة تكسي</h2>
@@ -88,28 +101,44 @@
                 <input type="text" id="pickup" placeholder="موقع الانطلاق (العشار، الجنينة..)" style="flex: 1;">
                 <button class="btn" style="width: auto; margin-top: 6px;" onclick="getGPSLocation()">📍 GPS</button>
             </div>
-            <input type="text" id="destination" placeholder="وجهة الوصول (المعقل، البرضعة..)">
+            <input type="text" id="destination" placeholder="وجهة الوصول (المعقل، البرضعة..)" oninput="calculateFare()">
+            <div style="background: rgba(0,0,0,0.03); padding: 10px; border-radius: 8px; margin: 8px 0; font-size: 13px;">
+                <span>estimated الأجرة التقديرية: </span><strong id="fare-price" style="color: var(--secondary-color);">3,000 د.ع</strong>
+            </div>
             <button class="btn" onclick="bookTaxi()">اطلب الكابتن الآن</button>
         </div>
 
-        <!-- قسم المطاعم -->
+        <!-- قسم المطاعم مع التصفية -->
         <div id="restaurants-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>مطاعم البصرة</h2>
-            <div style="margin-top: 12px;">
-                <div class="restaurant-item">
+            <select id="food-filter" onchange="filterRestaurants()" style="margin: 10px 0;">
+                <option value="all">جميع التصنيفات</option>
+                <option value="grill">مشاوي بصرية</option>
+                <option value="fastfood">وجبات سريعة</option>
+                <option value="juice">عصائر ومثلجات</option>
+            </select>
+            <div id="restaurants-list" style="margin-top: 10px;">
+                <div class="restaurant-item" data-category="grill">
                     <div>
                         <strong>مطعم الشطيطة الأصيل</strong>
-                        <p style="font-size: 11px; opacity: 0.7;">مشاوي وعصائر - 7,000 د.ع</p>
+                        <p style="font-size: 11px; opacity: 0.7;">مشاوي - 7,000 د.ع</p>
                     </div>
                     <button class="btn" style="width: auto; padding: 6px 12px; margin: 0;" onclick="addToCart('مشاوي الشطيطة', 7000)">إضافة</button>
                 </div>
-                <div class="restaurant-item">
+                <div class="restaurant-item" data-category="fastfood">
                     <div>
                         <strong>برجر البصرة</strong>
                         <p style="font-size: 11px; opacity: 0.7;">وجبة دبل - 5,000 د.ع</p>
                     </div>
                     <button class="btn" style="width: auto; padding: 6px 12px; margin: 0;" onclick="addToCart('وجبة برجر', 5000)">إضافة</button>
+                </div>
+                <div class="restaurant-item" data-category="juice">
+                    <div>
+                        <strong>عصائر المعقل الشهيرة</strong>
+                        <p style="font-size: 11px; opacity: 0.7;">عصير طبيعي - 3,000 د.ع</p>
+                    </div>
+                    <button class="btn" style="width: auto; padding: 6px 12px; margin: 0;" onclick="addToCart('عصير طبيعي', 3000)">إضافة</button>
                 </div>
             </div>
         </div>
@@ -125,17 +154,43 @@
             <p style="font-weight: bold;">المجموع الكلي: <span id="cart-total">0</span> د.ع</p>
             <button class="btn" onclick="checkout()">تأكيد وإرسال الطلب</button>
         </div>
-        <!-- قسم التتبع -->
+        <!-- قسم المحفظة الإلكترونية -->
+        <div id="wallet-section" class="section">
+            <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
+            <h2>محفظة بصراوي 💰</h2>
+            <div style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 20px; border-radius: 12px; text-align: center; margin: 15px 0;">
+                <p style="font-size: 13px; opacity: 0.9;">رصيدك الحالي</p>
+                <h3 style="font-size: 26px; margin: 5px 0;"><span id="wallet-balance">15,000</span> د.ع</h3>
+            </div>
+            <button class="btn" onclick="rechargeWallet()">شحن المحفظة (زين كاش)</button>
+        </div>
+
+        <!-- قسم الملف الشخصي والعناوين -->
+        <div id="profile-section" class="section">
+            <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
+            <h2>الملف الشخصي والعناوين</h2>
+            <input type="text" id="user-name" value="مجتبى مازن" placeholder="الاسم الكامل">
+            <input type="text" id="user-phone" value="07700000000" placeholder="رقم الهاتف">
+            <input type="text" id="user-address" value="البصرة - الجزائر" placeholder="العنوان المفضلة (البيت/العمل)">
+            <button class="btn" onclick="saveProfile()">حفظ التعديلات</button>
+        </div>
+
+        <!-- قسم التتبع والتقييم -->
         <div id="tracking-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>تتبع رحلتك أو طلبك</h2>
-            <p style="margin-top: 10px;">الكابتن في طريقه إليك، المسافة: <strong style="color: var(--secondary-color);">1.2 كم</strong></p>
-            <div style="background: rgba(0,0,0,0.05); height: 140px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 12px; font-weight: bold;">
+            <p style="margin-top: 10px;">حالة الطلب: <strong id="order-status-text" style="color: var(--secondary-color);">الكابتن في طريقه إليك (1.2 كم)</strong></p>
+            <div style="background: rgba(0,0,0,0.05); height: 130px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 12px; font-weight: bold;">
                 <span>🗺️ [خريطة شوارع البصرة الحية]</span>
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button class="btn" style="width: auto; padding: 5px 10px; background: #25d366; margin: 0;" onclick="alert('جاري فتح واتساب الكابتن...')">💬 مراسلة</button>
-                    <button class="btn" style="width: auto; padding: 5px 10px; background: #007bff; margin: 0;" onclick="alert('جاري الاتصال بالكابتن...')">📞 اتصال</button>
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                    <button class="btn" style="width: auto; padding: 4px 8px; background: #25d366; margin: 0; font-size: 12px;" onclick="alert('فتح محادثة واتساب الكابتن...')">💬 واتساب</button>
+                    <button class="btn" style="width: auto; padding: 4px 8px; background: #007bff; margin: 0; font-size: 12px;" onclick="alert('جاري الاتصال بالكابتن...')">📞 اتصال</button>
                 </div>
+            </div>
+            <!-- نظام التقييم -->
+            <div style="margin-top: 15px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 10px;">
+                <p style="font-size: 13px; margin-bottom: 5px;">قيم تجربتك مع الكابتن/المطعم:</p>
+                <div style="font-size: 22px; cursor: pointer;" onclick="rateService()">⭐ ⭐ ⭐ ⭐ ⭐</div>
             </div>
         </div>
 
@@ -148,10 +203,10 @@
             </div>
         </div>
     </div>
-
     <script>
         let cart = [];
         let historyData = [];
+        let walletBalance = 15000;
 
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -171,18 +226,39 @@
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
                     document.getElementById('pickup').value = `موقعي الحالي (خط العرض: ${position.coords.latitude.toFixed(2)})`;
+                    showNotification('تم تحديث موقعك عبر الـ GPS بنجاح!');
                 }, () => {
-                    alert('تعذر تحديد الموقع تلقائياً، يرجى كتابته يدوياً.');
+                    alert('تعذر تحديد الموقع تلقائياً.');
                 });
             } else {
-                alert('خدمة تحديد الموقع غير مدعومة في متصفحك.');
+                alert('الـ GPS غير مدعوم في متصفحك.');
             }
+        }
+
+        function calculateFare() {
+            const dest = document.getElementById('destination').value;
+            if (dest.length > 2) {
+                let calculated = 3000 + (dest.length * 250);
+                document.getElementById('fare-price').innerText = calculated.toLocaleString() + ' د.ع';
+            }
+        }
+
+        function filterRestaurants() {
+            const category = document.getElementById('food-filter').value;
+            const items = document.querySelectorAll('.restaurant-item');
+            items.forEach(item => {
+                if (category === 'all' || item.getAttribute('data-category') === category) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         }
 
         function addToCart(name, price) {
             cart.push({ name, price });
             updateCartUI();
-            alert(`تم إضافة (${name}) إلى السلة بنجاح!`);
+            showNotification(`تم إضافة (${name}) للسلة!`);
         }
 
         function updateCartUI() {
@@ -195,27 +271,27 @@
             }
             let html = '';
             let total = 0;
-            cart.forEach((item, index) => {
+            cart.forEach((item) => {
                 total += item.price;
                 html += `<div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--border-color);">
                     <span>${item.name}</span>
-                    <span>${item.price} د.ع</span>
+                    <span>${item.price.toLocaleString()} د.ع</span>
                 </div>`;
             });
             container.innerHTML = html;
-            document.getElementById('cart-total').innerText = total;
+            document.getElementById('cart-total').innerText = total.toLocaleString();
         }
 
         function bookTaxi() {
             const p = document.getElementById('pickup').value;
             const d = document.getElementById('destination').value;
             if(p && d) {
-                alert('تم إرسال طلب التكسي بنجاح!');
+                showNotification('تم طلب الكابتن بنجاح! جاري التوجيه للشاشة الحية...');
                 historyData.push(`رحلة تكسي من (${p}) إلى (${d})`);
                 updateHistoryUI();
                 showSection('tracking-section');
             } else {
-                alert('يرجى تحديد مكان الانطلاق والوجهة لطفاً.');
+                alert('يرجى كتابة مكان الانطلاق والوجهة لطفاً.');
             }
         }
 
@@ -224,12 +300,34 @@
                 alert('السلة فارغة!');
                 return;
             }
-            alert('تم تأكيد طلبك بنجاح وجاري تحضيره في البصرة!');
-            historyData.push(`طلب مطاعم يضم ${cart.length} مواد`);
-            updateHistoryUI();
-            cart = [];
-            updateCartUI();
-            showSection('tracking-section');
+            let total = cart.reduce((sum, i) => sum + i.price, 0);
+            if (walletBalance >= total) {
+                walletBalance -= total;
+                document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
+                showNotification('تم دفع قيمة الطلب من محفظتك بنجاح!');
+                historyData.push(`طلب مطاعم يضم ${cart.length} مواد بقيمة ${total.toLocaleString()} د.ع`);
+                updateHistoryUI();
+                cart = [];
+                updateCartUI();
+                showSection('tracking-section');
+            } else {
+                alert('رصيد المحفظة غير كافٍ! يرجى شحن المحفظة أولاً.');
+                showSection('wallet-section');
+            }
+        }
+
+        function rechargeWallet() {
+            walletBalance += 10000;
+            document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
+            showNotification('تم شحن المحفظة بنجاح بـ 10,000 د.ع!');
+        }
+
+        function saveProfile() {
+            showNotification('تم حفظ بيانات الحساب والعناوين بنجاح!');
+        }
+
+        function rateService() {
+            alert('شكراً لتقييمك! رأيك يهمنا لتحسين خدمات بصراوي.');
         }
 
         function updateHistoryUI() {
@@ -240,6 +338,14 @@
                 html += `<div style="padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 8px; font-size: 13px;">✅ ${h}</div>`;
             });
             container.innerHTML = html;
+        }
+
+        function showNotification(msg) {
+            const alertBox = document.getElementById('live-alert');
+            alertBox.innerText = msg;
+            setTimeout(() => {
+                alertBox.innerText = '👋 أهلاً بك في بصراوي! استمتع بخدمات التكسي والمطاعم في البصرة.';
+            }, 4000);
         }
     </script>
 </body>
