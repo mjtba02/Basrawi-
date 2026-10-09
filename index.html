@@ -109,7 +109,7 @@
                 </div>
             </div>
         </div>
-        <!-- قسم التكسي مع العناوين المحفوظة، الإكرامية، والملاحظات -->
+        <!-- قسم التكسي الذكي -->
         <div id="taxi-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>حجز رحلة تكسي ذكية</h2>
@@ -215,15 +215,26 @@
             <button class="btn" onclick="saveProfile()">حفظ التعديلات</button>
         </div>
 
-        <!-- قسم التتبع، مشاركة الرحلة وإلغائها -->
+        <!-- قسم التتبع مع الخريطة الحية (سيارات ودراجات تتحرك افتراضياً) -->
         <div id="tracking-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
-            <h2>تتبع رحلتك أو طلبك</h2>
-            <p style="margin-top: 10px;">حالة الطلب: <strong id="order-status-text" style="color: var(--secondary-color);">الكابتن في طريقه إليك</strong></p>
-            <div style="background: rgba(0,0,0,0.05); height: 130px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; position: relative; overflow: hidden;">
-                <div id="moving-map-icon" style="position: absolute; left: 10%; font-size: 24px; transition: left 1s linear;">🚗</div>
-                <span style="z-index: 2; margin-top: 35px; font-weight: bold;">🗺️ [خريطة شوارع البصرة الحية]</span>
+            <h2>تتبع رحلتك أو طلبك النشط</h2>
+            <p style="margin-top: 10px;">حالة الطلب: <strong id="order-status-text" style="color: var(--secondary-color);">الكابتن أو الدراجة في الطريق إليك</strong></p>
+            
+            <!-- خريطة البصرة التفاعلية مع أسطول متحرك افتراضياً -->
+            <div style="background: rgba(0,0,0,0.05); height: 160px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; position: relative; overflow: hidden; border: 1px solid var(--border-color);">
+                <!-- شبكة الشوارع الافتراضية -->
+                <div style="position: absolute; width: 100%; height: 2px; background: rgba(0,100,0,0.2); top: 50%;"></div>
+                <div style="position: absolute; height: 100%; width: 2px; background: rgba(0,100,0,0.2); left: 50%;"></div>
+                
+                <!-- الأيقونات الافتراضية المتحركة (تكسي، دراجة، دليفري) -->
+                <div id="fleet-car-1" style="position: absolute; top: 20%; left: 10%; font-size: 20px; transition: all 1.5s linear;">🚕</div>
+                <div id="fleet-bike-1" style="position: absolute; bottom: 25%; left: 70%; font-size: 20px; transition: all 1.5s linear;">🛵</div>
+                <div id="fleet-car-2" style="position: absolute; top: 60%; left: 40%; font-size: 20px; transition: all 1.5s linear;">🚙</div>
+
+                <span style="z-index: 2; background: rgba(255,255,255,0.8); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; color: var(--primary-color);">🗺️ خريطة البصرة الحية (أسطول بصراوي)</span>
             </div>
+
             <div style="display: flex; gap: 5px; margin-top: 10px;">
                 <button class="btn" style="background: #25d366; margin: 0; padding: 8px; font-size: 13px; flex: 1;" onclick="shareTripViaWhatsApp()">📤 مشاركة الرحلة</button>
                 <button class="btn" style="background: #dc3545; margin: 0; padding: 8px; font-size: 13px; flex: 1;" onclick="cancelActiveOrder()">إلغاء الطلب</button>
@@ -273,6 +284,7 @@
         let walletBalance = 15000;
         let loyaltyPoints = 120;
         let discountRate = 0;
+        let fleetInterval = null;
 
         const translations = {
             ar: { title: "Basrawi", subtitle: "تطبيقك الشامل في عاصمة البصرة الحبيبة", whatTodo: "ماذا ترغب أن تطلب اليوم؟", taxi: "حجز تكسي", restaurants: "المطاعم والطعام", tracking: "تتبع الطلب", history: "سجل الطلبات", profile: "حسابي والعناوين", chat: "الدردشة الحية" },
@@ -298,16 +310,19 @@
         }
 
         function triggerVibration() {
-            if (navigator.vibrate) {
-                navigator.vibrate(30); // اهتزاز خفيف وناعم جداً
-            }
+            if (navigator.vibrate) { navigator.vibrate(30); }
         }
 
         function showSection(sectionId) {
             triggerVibration();
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
-            if (sectionId === 'tracking-section') { startMovingMap(); }
+            
+            if (sectionId === 'tracking-section') { 
+                startFleetSimulation(); 
+            } else {
+                stopFleetSimulation();
+            }
         }
 
         function toggleDarkMode() {
@@ -356,11 +371,7 @@
         function addToCart(name, price) {
             triggerVibration();
             let existing = cart.find(item => item.name === name);
-            if (existing) {
-                existing.qty += 1;
-            } else {
-                cart.push({ name, price, qty: 1 });
-            }
+            if (existing) { existing.qty += 1; } else { cart.push({ name, price, qty: 1 }); }
             updateCartUI();
             showNotification(`تم إضافة (${name}) للسلة!`);
         }
@@ -368,9 +379,7 @@
         function changeQty(index, delta) {
             triggerVibration();
             cart[index].qty += delta;
-            if (cart[index].qty <= 0) {
-                cart.splice(index, 1);
-            }
+            if (cart[index].qty <= 0) { cart.splice(index, 1); }
             updateCartUI();
         }
 
@@ -465,7 +474,7 @@
 
         function shareTripViaWhatsApp() {
             triggerVibration();
-            let text = encodeURIComponent("أنا في رحلة تكسي عبر تطبيق بصراوي في البصرة الآن، وفي طريقي لوجهتي بسلام.");
+            let text = encodeURIComponent("أنا في رحلة أو طلب عبر تطبيق بصراوي في البصرة الآن.");
             window.open(`https://wa.me/?text=${text}`, '_blank');
         }
 
@@ -499,14 +508,38 @@
             }
         }
 
-        function startMovingMap() {
-            const carIcon = document.getElementById('moving-map-icon');
-            let pos = 10;
-            let interval = setInterval(() => {
-                pos += 15;
-                if (pos > 80) clearInterval(interval);
-                carIcon.style.left = pos + '%';
-            }, 800);
+        // محاكاة حركة أسطول السيارات والدراجات افتراضياً على خريطة التتبع
+        function startFleetSimulation() {
+            const car1 = document.getElementById('fleet-car-1');
+            const bike1 = document.getElementById('fleet-bike-1');
+            const car2 = document.getElementById('fleet-car-2');
+            
+            if (!car1 || !bike1 || !car2) return;
+
+            fleetInterval = setInterval(() => {
+                // تحريك عشوائي واقعي للأيقونات ضمن الخريطة الوهمية
+                let randomX1 = Math.floor(Math.random() * 70) + 10;
+                let randomY1 = Math.floor(Math.random() * 60) + 15;
+                
+                let randomX2 = Math.floor(Math.random() * 70) + 10;
+                let randomY2 = Math.floor(Math.random() * 60) + 15;
+
+                car1.style.left = randomX1 + '%';
+                car1.style.top = randomY1 + '%';
+
+                bike1.style.left = randomX2 + '%';
+                bike1.style.bottom = randomY2 + '%';
+
+                car2.style.left = (randomX1 + 20) % 80 + '%';
+                car2.style.top = (randomY2 + 10) % 70 + '%';
+            }, 2000);
+        }
+
+        function stopFleetSimulation() {
+            if (fleetInterval) {
+                clearInterval(fleetInterval);
+                fleetInterval = null;
+            }
         }
 
         function updateLoyaltyUI() { document.getElementById('loyalty-points').innerText = loyaltyPoints; }
