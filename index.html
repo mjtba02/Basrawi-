@@ -144,7 +144,6 @@
                 <span>⏱️ الوقت المقدر: <strong id="est-time">-- دقيقة</strong></span>
             </div>
 
-            <!-- تفضيلات الكابتن والسيارة -->
             <select id="driver-pref" style="margin: 5px 0; font-size: 12px;">
                 <option value="normal">تفضيلات الكابتن: عادي (بدون شروط)</option>
                 <option value="ac">سيارة مكيفة بالكامل ❄️</option>
@@ -397,7 +396,6 @@
             if (navigator.vibrate) { navigator.vibrate(30); }
         }
 
-        // تشغيل صوت تنبيه ناعم مع إشعارات Toast (الميزة رقم 5)
         function playBeepSound() {
             try {
                 let ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -743,7 +741,7 @@
         }
 
         function showToast(msg) {
-            playBeepSound(); // تشغيل النغمة الخفيفة مع كل إشعار
+            playBeepSound();
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = 'toast-msg';
