@@ -122,7 +122,7 @@
                 </div>
             </div>
         </div>
-        <!-- قسم التكسي الذكي -->
+        <!-- قسم التكسي مع الحاسبة التقديرية التلقائية للمسافة والزمن -->
         <div id="taxi-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>حجز رحلة تكسي ذكية</h2>
@@ -137,8 +137,14 @@
                 <span class="quick-tag" onclick="setSavedAddress('pickup', 'بيت الأهل (العشار)')">👨‍👩‍👦 بيت الأهل</span>
             </div>
 
-            <input type="text" id="destination" placeholder="وجهة الوصول.." oninput="calculateFare()">
+            <input type="text" id="destination" placeholder="وجهة الوصول (مثلاً: التنومة، المعقل..)" oninput="calculateDistanceAndFare()">
             
+            <!-- حاسبة المسافة والزمن التقديري -->
+            <div style="background: rgba(0,0,0,0.03); padding: 8px; border-radius: 6px; margin: 5px 0; font-size: 12px; display: flex; justify-content: space-between;">
+                <span>📏 المسافة: <strong id="est-distance">-- كم</strong></span>
+                <span>⏱️ الوقت المقدر: <strong id="est-time">-- دقيقة</strong></span>
+            </div>
+
             <div style="display: flex; gap: 8px; margin-top: 5px;">
                 <select id="taxi-tip" style="flex: 1; margin: 0; font-size: 12px;">
                     <option value="0">بدون إكرامية للكابتن</option>
@@ -152,12 +158,12 @@
             <input type="time" id="schedule-time">
 
             <div style="background: rgba(0,0,0,0.03); padding: 10px; border-radius: 8px; margin: 8px 0; font-size: 13px;">
-                <span>الأجرة التقديرية: </span><strong id="fare-price" style="color: var(--secondary-color);">3,000 د.ع</strong>
+                <span>الأجرة التقديرية النهائية: </span><strong id="fare-price" style="color: var(--secondary-color);">3,000 د.ع</strong>
             </div>
             <button class="btn" onclick="bookTaxi()">اطلب الكابتن الآن</button>
         </div>
 
-        <!-- قسم المطاعم مع المفضلة (❤️) -->
+        <!-- قسم المطاعم مع المفضلة -->
         <div id="restaurants-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>مطاعم البصرة والمفضلة ❤️</h2>
@@ -204,7 +210,7 @@
             </div>
         </div>
 
-        <!-- قسم سلة التسوق -->
+        <!-- قسم سلة التسوق مع فحص الرصيد المنخفض -->
         <div id="cart-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>سلة الطلبات والخصومات</h2>
@@ -215,11 +221,17 @@
                 <input type="text" id="promo-code" placeholder="كود الخصم (BASRA)" style="margin:0; flex: 1;">
                 <button class="btn" style="width: auto; margin: 0; padding: 8px 12px;" onclick="applyPromo()">تطبيق</button>
             </div>
+            
+            <!-- تنبيه رصيد المحفظة المنخفض الفوري -->
+            <div id="low-balance-warning" style="display: none; background: rgba(220,53,69,0.1); border: 1px solid #dc3545; padding: 8px; border-radius: 6px; margin: 8px 0; font-size: 12px; color: #dc3545; text-align: center;">
+                ⚠️ رصيد محفظتك لا يكفي لإتمام الطلب! <button onclick="rechargeWallet()" style="background:#dc3545; color:white; border:none; padding: 2px 6px; border-radius: 4px; cursor:pointer; margin-right:5px;">شحن فوري 10,000 د.ع</button>
+            </div>
+
             <hr style="border-color: var(--border-color); margin: 10px 0;">
             <p style="font-weight: bold;">المجموع النهائي: <span id="cart-total">0</span> د.ع</p>
             <button class="btn" onclick="checkout()">تأكيد وإرسال الطلب</button>
         </div>
-        <!-- قسم المحفظة مع سجل الحركات بالوقت والتاريخ -->
+        <!-- قسم المحفظة -->
         <div id="wallet-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>محفظة بصراوي 💰</h2>
@@ -245,14 +257,15 @@
             <button class="btn" onclick="saveProfile()">حفظ التعديلات</button>
         </div>
 
-        <!-- قسم التتبع مع العداد التنازلي الحقيقي للوصول (ETA) -->
+        <!-- قسم التتبع مع رمز التحقق السري (PIN) وعداد الـ ETA وأسباب الإلغاء -->
         <div id="tracking-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>تتبع رحلتك أو طلبك النشط</h2>
-            <p style="margin-top: 8px;">حالة الطلب: <strong id="order-status-text" style="color: var(--secondary-color);">الكابتن في الطريق إليك</strong></p>
-            <p style="font-size: 13px; margin-top: 4px; background: rgba(0,100,0,0.08); padding: 6px; border-radius: 6px; text-align: center;">⏳ الوقت المتوقع للوصول (ETA): <strong id="eta-countdown" style="color: var(--primary-color);">04:50 دقيقة</strong></p>
+            <p style="margin-top: 6px;">حالة الطلب: <strong id="order-status-text" style="color: var(--secondary-color);">الكابتن في الطريق إليك</strong></p>
+            <p style="font-size: 13px; margin-top: 4px; background: rgba(0,100,0,0.08); padding: 6px; border-radius: 6px; text-align: center;">🔐 رمز التحقق السري (PIN): <strong id="order-pin-code" style="color: var(--primary-color); letter-spacing: 2px;">4821</strong></p>
+            <p style="font-size: 12px; margin-top: 4px; background: rgba(0,0,0,0.03); padding: 5px; border-radius: 6px; text-align: center;">⏳ الوقت المتوقع للوصول (ETA): <strong id="eta-countdown" style="color: var(--primary-color);">04:50 دقيقة</strong></p>
             
-            <div style="background: rgba(0,0,0,0.05); height: 140px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; position: relative; overflow: hidden; border: 1px solid var(--border-color);">
+            <div style="background: rgba(0,0,0,0.05); height: 130px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 8px; position: relative; overflow: hidden; border: 1px solid var(--border-color);">
                 <div style="position: absolute; width: 100%; height: 2px; background: rgba(0,100,0,0.2); top: 50%;"></div>
                 <div style="position: absolute; height: 100%; width: 2px; background: rgba(0,100,0,0.2); left: 50%;"></div>
                 
@@ -262,13 +275,13 @@
                 <span style="z-index: 2; background: rgba(255,255,255,0.8); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; color: var(--primary-color);">🗺️ خريطة البصرة الحية</span>
             </div>
 
-            <div style="display: flex; gap: 5px; margin-top: 10px;">
-                <button class="btn" style="background: #007bff; margin: 0; padding: 8px; font-size: 12px; flex: 1;" onclick="shareLiveCoordinates()">📍 إحداثياتي</button>
-                <button class="btn" style="background: #25d366; margin: 0; padding: 8px; font-size: 12px; flex: 1;" onclick="shareTripViaWhatsApp()">📤 واتساب</button>
-                <button class="btn" style="background: #dc3545; margin: 0; padding: 8px; font-size: 12px; flex: 1;" onclick="cancelActiveOrder()">إلغاء</button>
+            <div style="display: flex; gap: 5px; margin-top: 8px;">
+                <button class="btn" style="background: #007bff; margin: 0; padding: 6px; font-size: 11px; flex: 1;" onclick="shareLiveCoordinates()">📍 إحداثياتي</button>
+                <button class="btn" style="background: #25d366; margin: 0; padding: 6px; font-size: 11px; flex: 1;" onclick="shareTripViaWhatsApp()">📤 واتساب</button>
+                <button class="btn" style="background: #dc3545; margin: 0; padding: 6px; font-size: 11px; flex: 1;" onclick="promptCancelReason()">إلغاء الطلب</button>
             </div>
             
-            <div style="margin-top: 10px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 6px;">
+            <div style="margin-top: 8px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 5px;">
                 <p style="font-size: 12px; margin-bottom: 2px;">قيم تجربتك:</p>
                 <div style="font-size: 18px; cursor: pointer;" onclick="rateService()">⭐ ⭐ ⭐ ⭐ ⭐</div>
             </div>
@@ -328,7 +341,6 @@
             return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }
 
-        // إخفاء شاشة التحميل، وضع ليلي تلقائي، وفحص بطارية الهاتف
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
@@ -343,11 +355,10 @@
                 document.body.setAttribute('data-theme', 'dark');
             }
 
-            // فحص حالة بطارية الهاتف (ميزة تنبيه البطارية الضعيفة)
             if (navigator.getBattery) {
                 navigator.getBattery().then(battery => {
                     if (battery.level < 0.2 && !battery.charging) {
-                        showToast('⚠️ انتبه: بطارية هاتفك ضعيفة (< 20%). تم تفعيل استهلاك خفيف.');
+                        showToast('⚠️ انتبه: بطارية هاتفك ضعيفة (< 20%). تم تفعيل وضع الاستهلاك الخفيف.');
                     }
                 });
             }
@@ -381,7 +392,7 @@
             
             if (sectionId === 'tracking-section') { 
                 startFleetSimulation(); 
-                startETACountdown(290); // يبدأ من 4 دقائق و 50 ثانية
+                startETACountdown(290);
             } else {
                 stopFleetSimulation();
                 stopETACountdown();
@@ -427,11 +438,21 @@
             showSection('cart-section');
         }
 
-        function calculateFare() {
-            const dest = document.getElementById('destination').value;
-            if (dest.length > 2) {
-                let calculated = 3000 + (dest.length * 250);
-                document.getElementById('fare-price').innerText = calculated.toLocaleString() + ' د.ع';
+        // حاسبة المسافة والزمن التقديري الفعلي بناءً على الوجهة
+        function calculateDistanceAndFare() {
+            const dest = document.getElementById('destination').value.trim();
+            if (dest.length > 1) {
+                let distanceKm = (dest.length * 1.8).toFixed(1);
+                let timeMins = Math.round(distanceKm * 2.5);
+                let calculatedFare = 3000 + (Math.round(distanceKm) * 350);
+
+                document.getElementById('est-distance').innerText = distanceKm + ' كم';
+                document.getElementById('est-time').innerText = timeMins + ' دقيقة';
+                document.getElementById('fare-price').innerText = calculatedFare.toLocaleString() + ' د.ع';
+            } else {
+                document.getElementById('est-distance').innerText = '-- كم';
+                document.getElementById('est-time').innerText = '-- دقيقة';
+                document.getElementById('fare-price').innerText = '3,000 د.ع';
             }
         }
 
@@ -474,6 +495,7 @@
             if (cart.length === 0) {
                 container.innerHTML = '<p style="text-align: center; opacity: 0.6; padding: 15px;">السلة فارغة حالياً</p>';
                 document.getElementById('cart-total').innerText = '0';
+                document.getElementById('low-balance-warning').style.display = 'none';
                 return;
             }
             let html = '';
@@ -491,7 +513,15 @@
             });
             if (discountRate > 0) total = total * (1 - discountRate);
             container.innerHTML = html;
-            document.getElementById('cart-total').innerText = Math.round(total).toLocaleString();
+            let finalTotalRounded = Math.round(total);
+            document.getElementById('cart-total').innerText = finalTotalRounded.toLocaleString();
+
+            // فحص رصيد المحفظة المنخفض الفوري داخل السلة
+            if (walletBalance < finalTotalRounded) {
+                document.getElementById('low-balance-warning').style.display = 'block';
+            } else {
+                document.getElementById('low-balance-warning').style.display = 'none';
+            }
         }
 
         function bookTaxi() {
@@ -543,10 +573,12 @@
             }
         }
 
-        function cancelActiveOrder() {
+        // نظام إلغاء الرحلة مع أسباب الإلغاء الذكية
+        function promptCancelReason() {
             triggerVibration();
-            if (confirm('هل أنت متأكد من رغبتك بإلغاء الطلب/الرحلة؟')) {
-                showToast('تم إلغاء الطلب بنجاح.');
+            let reason = prompt("اختر سبب إلغاء الرحلة أو الطلب:\n1. تأخر الكابتن\n2. غيرت رأيي\n3. خطأ بموقع الانطلاق/الوجهة\n4. سبب آخر", "غيرت رأيي");
+            if (reason) {
+                showToast(`تم إلغاء الطلب بنجاح. السبب: ${reason}`);
                 showSection('home-section');
             }
         }
@@ -573,6 +605,7 @@
             document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
             walletLogData.push(`[${getCurrentTimeString()}] + شحن محفظة: 10,000 د.ع`);
             updateWalletLogUI();
+            updateCartUI(); // تحديث فحص الرصيد بالسلة تلقائياً
             showToast('تم شحن المحفظة بـ 10,000 د.ع بنجاح!');
         }
 
@@ -628,7 +661,6 @@
             }
         }
 
-        // عداد تنازلي حقيقي للوقت المتوقع للوصول (ETA Countdown)
         function startETACountdown(seconds) {
             const etaEl = document.getElementById('eta-countdown');
             if (!etaEl) return;
