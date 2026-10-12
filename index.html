@@ -6,6 +6,8 @@
     <title>بصراوي - Basrawi Super-App</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#006400">
+    <!-- استدعاء مكتبة الخرائط الحقيقية Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <style>
         :root {
             --bg-color: #f4f7f6;
@@ -89,7 +91,6 @@
                 <div><b>طقس البصرة اليوم:</b> أجواء مشمسة ودافئة (32°م). اطلب تكسي مكيف لرحلة مريحة!</div>
             </div>
 
-            <!-- زر المساعد الصوتي للبحث السريع -->
             <div style="background: rgba(0,100,0,0.08); padding: 8px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; font-size: 12px;">
                 <span>🎙️ ابحث أو اطلب بصوتك مباشرة:</span>
                 <button onclick="startVoiceSearch()" style="background: var(--primary-color); color: white; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px;">تحدث الآن 🎤</button>
@@ -144,7 +145,7 @@
             </div>
 
             <div style="display: flex; gap: 5px;">
-                <input type="text" id="pickup" placeholder="موقع الانطلاق (العشار، الجنينة..)" style="flex: 1;">
+                <input type="text" id="pickup" placeholder="موقع الانطلاق (العشار، الجزائر..)" style="flex: 1;">
                 <button class="btn" style="width: auto; margin-top: 6px;" onclick="getGPSLocation()">📍 GPS</button>
             </div>
             
@@ -168,7 +169,6 @@
                 <span>⏱️ الوقت المقدر: <strong id="est-time">-- دقيقة</strong></span>
             </div>
 
-            <!-- خيارات تفضيلات الكابتن وتكسي العائلات -->
             <select id="driver-pref" style="margin: 5px 0; font-size: 12px;">
                 <option value="normal">تفضيلات الكابتن: عادي (بدون شروط)</option>
                 <option value="family">🧕 تكسي العائلات (سائق عائلي / مخصص)</option>
@@ -185,7 +185,6 @@
                 <input type="text" id="driver-note" placeholder="ملاحظة للسائق.." style="flex: 1; margin: 0; font-size: 12px;">
             </div>
 
-            <!-- الرحلات المجدولة اليومية -->
             <label style="font-size: 12px; margin-top: 8px; display: block;">⏰ جدولة الرحلة لوقت لاحق أو اشتراك يومي:</label>
             <input type="time" id="schedule-time">
 
@@ -194,7 +193,7 @@
             </div>
             <button class="btn" onclick="bookTaxi()">اطلب الكابتن الآن</button>
         </div>
-        <!-- قسم المطاعم المتقدم -->
+        <!-- قسم المطاعم -->
         <div id="restaurants-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>مطاعم البصرة وتقييم الأطباق ⭐</h2>
@@ -267,7 +266,7 @@
             <p style="font-weight: bold;">المجموع النهائي: <span id="cart-total">0</span> د.ع</p>
             <button class="btn" onclick="checkout()">تأكيد وإرسال الطلب</button>
         </div>
-        <!-- قسم المحفظة والمالية المتقدمة -->
+        <!-- قسم المحفظة والمالية -->
         <div id="wallet-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>محفظة بصراوي 💰</h2>
@@ -281,7 +280,6 @@
                 <button class="btn" style="flex: 1; margin: 0; background: #ffc107; color: #000;" onclick="openPaymentGateway()">💳 زين كاش / ماستر</button>
             </div>
 
-            <!-- تحويل رصيد للأصدقاء -->
             <button class="btn" style="background: #17a2b8; margin-top: 8px; padding: 8px; font-size: 12px;" onclick="transferBalanceToFriend()">💸 تحويل رصيد لصديق</button>
             
             <div style="background: rgba(0,100,0,0.05); border: 1px dashed var(--primary-color); padding: 10px; border-radius: 8px; margin: 10px 0; text-align: center; font-size: 12px;">
@@ -300,7 +298,7 @@
             </div>
         </div>
 
-        <!-- قسم الملف الشخصي مع تحليل المصاريف -->
+        <!-- قسم الملف الشخصي -->
         <div id="profile-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>الملف الشخصي والعناوين المحفوظة</h2>
@@ -310,25 +308,18 @@
             <button class="btn" onclick="saveProfile()">حفظ التعديلات</button>
             <button class="btn" style="background: #6f42c1; margin-top: 8px;" onclick="showMonthlyAnalytics()">📊 تحليل المصاريف الشهرية والتوفير</button>
         </div>
-        <!-- قسم التتبع المتقدم والـ SOS -->
+        <!-- قسم التتبع واستبدال الخريطة الافتراضية بخريطة حقيقية لمناطق البصرة -->
         <div id="tracking-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
-            <h2>تتبع رحلتك أو طلبك النشط</h2>
-            <p style="margin-top: 6px;">حالة الطلب: <strong id="order-status-text" style="color: var(--secondary-color);">الكابتن في الطريق إليك</strong></p>
+            <h2>تتبع رحلتك أو طلبك في شوارع البصرة</h2>
+            <p style="margin-top: 6px;">حالة الطلب: <strong id="order-status-text" style="color: var(--secondary-color);">الكابتن يتحرك في شوارع البصرة</strong></p>
             <p style="font-size: 12px; margin-top: 4px; background: rgba(0,100,0,0.08); padding: 5px; border-radius: 6px; text-align: center;">🔐 رمز التحقق (PIN): <strong id="order-pin-code" style="color: var(--primary-color); letter-spacing: 2px;">4821</strong></p>
             <p style="font-size: 11px; margin-top: 3px; background: rgba(0,0,0,0.03); padding: 4px; border-radius: 6px; text-align: center;">⏳ الوقت المتوقع للوصول (ETA): <strong id="eta-countdown" style="color: var(--primary-color);">04:50 دقيقة</strong></p>
             
-            <div style="background: rgba(0,0,0,0.05); height: 110px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 6px; position: relative; overflow: hidden; border: 1px solid var(--border-color);">
-                <div style="position: absolute; width: 100%; height: 2px; background: rgba(0,100,0,0.2); top: 50%;"></div>
-                <div style="position: absolute; height: 100%; width: 2px; background: rgba(0,100,0,0.2); left: 50%;"></div>
-                
-                <div id="fleet-car-1" style="position: absolute; top: 20%; left: 10%; font-size: 18px; transition: all 1.5s linear;">🚕</div>
-                <div id="fleet-bike-1" style="position: absolute; bottom: 25%; left: 70%; font-size: 18px; transition: all 1.5s linear;">🛵</div>
+            <!-- حاوية الخريطة الحقيقية لمناطق البصرة -->
+            <div id="real-basra-map" style="height: 220px; border-radius: 12px; margin-top: 8px; border: 2px solid var(--primary-color); z-index: 1;"></div>
 
-                <span style="z-index: 2; background: rgba(255,255,255,0.8); padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; color: var(--primary-color);">🗺️ خريطة البصرة الحية</span>
-            </div>
-
-            <div style="display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap;">
+            <div style="display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap;">
                 <button class="btn" style="background: #25d366; margin: 0; padding: 6px; font-size: 11px; flex: 1;" onclick="shareLiveLocationWhatsApp()">📤 مشاركة موقعي</button>
                 <button class="btn" style="background: #ffc107; color: #000; margin: 0; padding: 6px; font-size: 11px; flex: 1;" onclick="giveDigitalTip()">🎁 إكرامية فورية</button>
                 <button class="btn" style="background: #dc3545; margin: 0; padding: 6px; font-size: 11px; flex: 1;" onclick="triggerSOSAlert()">🚨 طوارئ SOS</button>
@@ -371,6 +362,8 @@
             </div>
         </div>
     </div>
+    <!-- استدعاء مكتبة Leaflet JavaScript للخرائط الحقيقية -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
         let cart = [];
         let historyData = [];
@@ -378,9 +371,10 @@
         let walletBalance = 15000;
         let loyaltyPoints = 120;
         let discountRate = 0;
-        let fleetInterval = null;
         let etaTimer = null;
         let totalSpentMonth = 45000;
+        let basraMap = null;
+        let carMarker = null;
 
         const translations = {
             ar: { title: "Basrawi", subtitle: "تطبيقك الشامل في عاصمة البصرة الحبيبة", whatTodo: "ماذا ترغب أن تطلب اليوم؟", taxi: "حجز تكسي", restaurants: "المطاعم والطعام", tracking: "تتبع الطلب", history: "سجل الطلبات", profile: "حسابي والعناوين", chat: "الدردشة الحية" },
@@ -443,12 +437,31 @@
             document.getElementById(sectionId).classList.add('active');
             
             if (sectionId === 'tracking-section') { 
-                startFleetSimulation(); 
+                initRealBasraMap();
                 startETACountdown(290);
             } else {
-                stopFleetSimulation();
                 stopETACountdown();
             }
+        }
+
+        function initRealBasraMap() {
+            setTimeout(() => {
+                if (!basraMap) {
+                    basraMap = L.map('real-basra-map').setView([30.5081, 47.7835], 13);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '© Basrawi Map OpenStreetMap'
+                    }).addTo(basraMap);
+
+                    L.marker([30.5150, 47.8100]).addTo(basraMap).bindPopup('<b>منطقة العشار</b> - قلب التجارة');
+                    L.marker([30.5300, 47.7900]).addTo(basraMap).bindPopup('<b>منطقة الجزائر</b> - السكن والأسواق');
+                    L.marker([30.5500, 47.8200]).addTo(basraMap).bindPopup('<b>منطقة المعقل</b> - الشارع التجاري');
+
+                    carMarker = L.marker([30.5100, 47.8000]).addTo(basraMap).bindPopup('<b>الكابتن أبو حيدر</b> في الطريق إليك 🚕').openPopup();
+                } else {
+                    basraMap.invalidateSize();
+                }
+            }, 300);
         }
 
         function toggleDarkMode() {
@@ -456,12 +469,11 @@
             const body = document.body;
             body.setAttribute('data-theme', body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
         }
-
         function getGPSLocation() {
             triggerVibration();
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
-                    document.getElementById('pickup').value = `موقعي الحالي (${position.coords.latitude.toFixed(2)})`;
+                    document.getElementById('pickup').value = `موقعي الحالي في البصرة (${position.coords.latitude.toFixed(2)})`;
                     showToast('تم تحديث موقعك عبر الـ GPS بنجاح!');
                 }, () => { showToast('تعذر تحديد الموقع.'); });
             } else { showToast('الـ GPS غير مدعوم.'); }
@@ -587,7 +599,6 @@
                 document.getElementById('low-balance-warning').style.display = 'none';
             }
         }
-
         function bookTaxi() {
             triggerVibration();
             const p = document.getElementById('pickup').value;
@@ -757,17 +768,6 @@
                 box.scrollTop = box.scrollHeight;
             }
         }
-
-        function startFleetSimulation() {
-            const c = document.getElementById('fleet-car-1');
-            const b = document.getElementById('fleet-bike-1');
-            if (!c || !b) return;
-            fleetInterval = setInterval(() => {
-                c.style.left = (Math.floor(Math.random() * 70) + 10) + '%';
-                c.style.top = (Math.floor(Math.random() * 60) + 15) + '%';
-            }, 2000);
-        }
-        function stopFleetSimulation() { if (fleetInterval) { clearInterval(fleetInterval); fleetInterval = null; } }
 
         function startETACountdown(secs) {
             const el = document.getElementById('eta-countdown');
