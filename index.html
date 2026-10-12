@@ -57,7 +57,6 @@
     </style>
 </head>
 <body data-theme="light">
-
     <div id="splash-screen">
         <div class="splash-logo">بصراوي</div>
         <h2>Basrawi Super-App</h2>
@@ -85,7 +84,6 @@
     <div class="container">
         <!-- الرئيسية -->
         <div id="home-section" class="section active">
-            <!-- شريط حالة الطقس الذكي -->
             <div class="weather-banner">
                 <span>☀️</span>
                 <div><b>طقس البصرة اليوم:</b> أجواء مشمسة ودافئة (32°م). اطلب تكسي مكيف لرحلة مريحة!</div>
@@ -129,12 +127,11 @@
                 </div>
             </div>
         </div>
-        <!-- قسم التكسي ودليل المناطق وكابتن الشهر -->
+        <!-- قسم التكسي -->
         <div id="taxi-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>حجز رحلة تكسي ذكية</h2>
 
-            <!-- بطاقة كابتن الشهر -->
             <div style="background: rgba(0,100,0,0.06); border: 1px solid var(--primary-color); padding: 8px; border-radius: 8px; margin-bottom: 10px; font-size: 12px; display: flex; align-items: center; justify-content: space-between;">
                 <div>🏆 <b>كابتن الشهر:</b> أبو حيدر (4.9 ⭐)</div>
                 <span style="font-size: 10px; background: var(--primary-color); color: white; padding: 2px 6px; border-radius: 4px;">الأعلى تقييماً</span>
@@ -153,7 +150,6 @@
 
             <input type="text" id="destination" placeholder="وجهة الوصول (مثلاً: التنومة، المعقل..)" oninput="calculateDistanceAndFare()">
             
-            <!-- دليل أسعار المناطق -->
             <details style="margin: 6px 0; font-size: 12px; background: rgba(0,0,0,0.02); padding: 6px; border-radius: 6px;">
                 <summary style="cursor: pointer; font-weight: bold; color: var(--primary-color);">🗺️ دليل تسعيرة مناطق البصرة التقريبية</summary>
                 <p style="margin-top: 4px;">• العشار ↔ الجزائر: 3,000 - 4,000 د.ع</p>
@@ -190,7 +186,7 @@
             <button class="btn" onclick="bookTaxi()">اطلب الكابتن الآن</button>
         </div>
 
-        <!-- قسم المطاعم مع جدولة وقت الوصول -->
+        <!-- قسم المطاعم -->
         <div id="restaurants-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>مطاعم البصرة وتقييم الأطباق ⭐</h2>
@@ -260,7 +256,7 @@
             <p style="font-weight: bold;">المجموع النهائي: <span id="cart-total">0</span> د.ع</p>
             <button class="btn" onclick="checkout()">تأكيد وإرسال الطلب</button>
         </div>
-        <!-- قسم المحفظة ودعوة الأصدقاء -->
+        <!-- قسم المحفظة -->
         <div id="wallet-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>محفظة بصراوي 💰</h2>
@@ -270,7 +266,6 @@
             </div>
             <button class="btn" onclick="rechargeWallet()">شحن المحفظة بـ 10,000 د.ع</button>
             
-            <!-- ميزة برنامج صديق بصراوي -->
             <div style="background: rgba(0,100,0,0.05); border: 1px dashed var(--primary-color); padding: 10px; border-radius: 8px; margin: 12px 0; text-align: center; font-size: 12px;">
                 <p>🎁 <b>برنامج صديق بصراوي:</b> شارك التطبيق مع أصدقائك واحصل على 2,000 د.ع رصيد مجاني!</p>
                 <button class="btn" style="background: #25d366; margin-top: 6px; padding: 6px; font-size: 12px;" onclick="shareReferralLink()">مشاركة كود الدعوة عبر واتساب 📤</button>
@@ -326,7 +321,7 @@
             </div>
         </div>
 
-        <!-- قسم الإيصال الرقمي للفاتورة -->
+        <!-- قسم الإيصال الرقمي -->
         <div id="receipt-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرئيسية</button>
             <h2>🧾 إيصال الدفع الرقمي</h2>
@@ -337,7 +332,7 @@
             <button class="btn" onclick="showSection('home-section')">تم، العودة للرئيسية</button>
         </div>
 
-        <!-- قسم الدردشة الحية -->
+        <!-- قسم الدردشة الحية وسجل الطلبات -->
         <div id="chat-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>الدردشة الفورية مع الكابتن</h2>
@@ -345,7 +340,19 @@
                 <p style="color: #666; text-align: center;">أهلاً بك، ابدأ المراسلة مع الكابتن هنا...</p>
             </div>
             <div style="display: flex; gap: 5px;">
-                <input type="text" id="chat-input" placeholder="اكتب رسالتك..." style="margin: 0; flex: 
+                <input type="text" id="chat-input" placeholder="اكتب رسالتك..." style="margin: 0; flex: 1;">
+                <button class="btn" style="width: auto; margin: 0; padding: 8px 15px;" onclick="sendChatMessage()">إرسال</button>
+            </div>
+        </div>
+
+        <div id="history-section" class="section">
+            <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
+            <h2>سجل الطلبات والرحلات</h2>
+            <div id="history-list" style="margin-top: 10px;">
+                <p style="text-align: center; opacity: 0.6; padding: 15px;">لا توجد طلبات سابقة مسجلة</p>
+            </div>
+        </div>
+    </div>
     <script>
         let cart = [];
         let historyData = [];
