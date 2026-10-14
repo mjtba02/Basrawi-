@@ -88,7 +88,7 @@
         <div id="home-section" class="section active">
             <div class="weather-banner">
                 <span>☀️</span>
-                <div><b>طقس البصرة اليوم:</b> أجواء مشمسة ودافئة (32°م). اطلب تكسي مكيف لرحلة مريحة!</div>
+                <div><b>طقس البصرة اليوم:</b> أجواء مشمسة ودافئة (32°م). اطلب تكسي أو خط طلابي مكيف!</div>
             </div>
 
             <div style="background: rgba(0,100,0,0.08); padding: 8px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; font-size: 12px;">
@@ -116,6 +116,11 @@
                     <div class="icon">🍔</div>
                     <h3 id="t-restaurants">المطاعم والطعام</h3>
                 </div>
+                <!-- كارت نقل الطلاب الجديد بجانب التكسي والمطاعم مباشرة -->
+                <div class="card" onclick="showSection('student-bus-section')" style="border: 2px solid var(--primary-color); background: rgba(0,100,0,0.03);">
+                    <div class="icon">🚌</div>
+                    <h3 style="color: var(--primary-color);">خطوط نقل الطلاب</h3>
+                </div>
                 <div class="card" onclick="showSection('tracking-section')">
                     <div class="icon">📍</div>
                     <h3 id="t-tracking">تتبع الطلب</h3>
@@ -133,6 +138,39 @@
                     <h3 id="t-chat">الدردشة الحية</h3>
                 </div>
             </div>
+        </div>
+        <!-- قسم خطوط نقل الطلاب والجامعات (الكيا والكوستر) -->
+        <div id="student-bus-section" class="section">
+            <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
+            <h2>🚌 خطوط وااشتراكات النقل الطلابي في البصرة</h2>
+            <p style="font-size: 12px; opacity: 0.8; margin-bottom: 10px;">احجز خط كيا / كوستر مكيف من بيتك إلى كليتك أو مدرستك.</p>
+
+            <label style="font-size: 12px; font-weight: bold;">اختر نوع الاشتراك الطلابي:</label>
+            <select id="bus-plan-type" onchange="updateBusFare()" style="margin: 5px 0;">
+                <option value="monthly">📅 اشتراك شهري (50,000 د.ع / شهر)</option>
+                <option value="yearly">🎓 اشتراك سنوي/فصلي (200,000 د.ع / الفصل الدراسي)</option>
+            </select>
+
+            <label style="font-size: 12px; font-weight: bold; margin-top: 6px; display: block;">منطقة الانطلاق (السكن):</label>
+            <input type="text" id="bus-pickup" placeholder="مثلاً: الجزائر، الجنينة، حيوية.." value="البصرة - الجزائر">
+
+            <label style="font-size: 12px; font-weight: bold; margin-top: 6px; display: block;">الجهة التعليمية (المجمع الجامعي / المدرسة):</label>
+            <select id="bus-destination" style="margin: 5px 0;">
+                <option value="karma">جامعة البصرة - مجمع كرمة علي</option>
+                <option value="zubair">جامعة البصرة - مجمع باب الزبير</option>
+                <option value="feniya">المعهد التقني / الكلية التقنية</option>
+                <option value="dorms">الأقسام الداخلية للطلاب</option>
+            </select>
+
+            <div style="background: rgba(0,100,0,0.05); border: 1px solid var(--primary-color); padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 12px;">
+                <span>المبلغ الكلي للاشتراك: </span><strong id="bus-total-price" style="color: var(--primary-color); font-size: 15px;">50,000 د.ع</strong>
+            </div>
+
+            <!-- خريطة مسار الكيا/الباص الطلابي الحي -->
+            <label style="font-size: 12px; font-weight: bold;">🗺️ خريطة مسار الخط ونقاط التجمع القريبة:</label>
+            <div id="bus-route-map" style="height: 180px; border-radius: 10px; margin-top: 5px; border: 1px solid var(--primary-color); z-index: 1;"></div>
+
+            <button class="btn" onclick="subscribeStudentBus()">تأكيد واشتراك في الخط الآن 🎓</button>
         </div>
         <!-- قسم التكسي المتقدم -->
         <div id="taxi-section" class="section">
@@ -246,6 +284,7 @@
                 </div>
             </div>
         </div>
+
         <!-- قسم سلة التسوق -->
         <div id="cart-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
@@ -374,6 +413,7 @@
         let etaTimer = null;
         let totalSpentMonth = 45000;
         let basraMap = null;
+        let busMap = null;
         let carMarker = null;
 
         const translations = {
@@ -439,15 +479,38 @@
             if (sectionId === 'tracking-section') { 
                 initRealBasraMap();
                 startETACountdown(290);
+            } else if (sectionId === 'student-bus-section') {
+                initBusRouteMap();
+                stopETACountdown();
             } else {
                 stopETACountdown();
             }
         }
 
+        // تهيئة خريطة خطوط الكيا والنقل الطلابي
+        function initBusRouteMap() {
+            setTimeout(() => {
+                if (!busMap) {
+                    busMap = L.map('bus-route-map').setView([30.5500, 47.7900], 12);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '© Basrawi Bus Route Map'
+                    }).addTo(busMap);
+
+                    L.marker([30.5300, 47.7900]).addTo(busMap).bindPopup('<b>محطة الجزائر</b> - انطلاق الخط الطلاب');
+                    L.marker([30.5700, 47.7800]).addTo(busMap).bindPopup('<b>مجمع كرمة علي الجامعي 🎓</b>').openPopup();
+                } else {
+                    busMap.invalidateSize();
+                }
+            }, 300);
+        }
+
+        // تهيئة وتشغيل الخريطة الحقيقية لمناطق البصرة عبر Leaflet
         function initRealBasraMap() {
             setTimeout(() => {
                 if (!basraMap) {
                     basraMap = L.map('real-basra-map').setView([30.5081, 47.7835], 13);
+                    
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         maxZoom: 19,
                         attribution: '© Basrawi Map OpenStreetMap'
@@ -468,6 +531,41 @@
             triggerVibration();
             const body = document.body;
             body.setAttribute('data-theme', body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+        }
+
+        function updateBusFare() {
+            const plan = document.getElementById('bus-plan-type').value;
+            const priceEl = document.getElementById('bus-total-price');
+            if (plan === 'monthly') {
+                priceEl.innerText = "50,000 د.ع";
+            } else {
+                priceEl.innerText = "200,000 د.ع";
+            }
+        }
+
+        function subscribeStudentBus() {
+            triggerVibration();
+            const dest = document.getElementById('bus-destination').options[document.getElementById('bus-destination').selectedIndex].text;
+            const priceText = document.getElementById('bus-total-price').innerText;
+            const cost = parseInt(priceText.replace(/[^0-9]/g, '')) || 50000;
+
+            if (walletBalance >= cost) {
+                walletBalance -= cost;
+                totalSpentMonth += cost;
+                document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
+                walletLogData.push(`[${getCurrentTimeString()}] - اشتراك خط طلابي: ${cost.toLocaleString()} د.ع`);
+                updateWalletLogUI();
+
+                showToast(`✅ تم الاشتراك بنجاح في خط (${dest})!`);
+                historyData.push(`اشتراك خط طلابي إلى (${dest}) بقيمة ${priceText}`);
+                loyaltyPoints += 40;
+                updateLoyaltyUI();
+                updateHistoryUI();
+                showSection('home-section');
+            } else {
+                showToast('رصيد المحفظة غير كافٍ للاشتراك!');
+                showSection('wallet-section');
+            }
         }
         function getGPSLocation() {
             triggerVibration();
@@ -599,6 +697,7 @@
                 document.getElementById('low-balance-warning').style.display = 'none';
             }
         }
+
         function bookTaxi() {
             triggerVibration();
             const p = document.getElementById('pickup').value;
