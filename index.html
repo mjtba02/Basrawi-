@@ -88,7 +88,7 @@
         <div id="home-section" class="section active">
             <div class="weather-banner">
                 <span>☀️</span>
-                <div><b>طقس البصرة اليوم:</b> أجواء مشمسة ودافئة (32°م). اطلب تكسي أو خط طلابي مكيف!</div>
+                <div><b>طقس البصرة اليوم:</b> أجواء مشمسة ودافئة (32°م). اطلب تكسي أو تابع عائلتك بسلام!</div>
             </div>
 
             <div style="background: rgba(0,100,0,0.08); padding: 8px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; font-size: 12px;">
@@ -116,10 +116,15 @@
                     <div class="icon">🍔</div>
                     <h3 id="t-restaurants">المطاعم والطعام</h3>
                 </div>
-                <!-- كارت نقل الطلاب الجديد بجانب التكسي والمطاعم مباشرة -->
-                <div class="card" onclick="showSection('student-bus-section')" style="border: 2px solid var(--primary-color); background: rgba(0,100,0,0.03);">
+                <!-- كارت خطوط نقل الطلاب -->
+                <div class="card" onclick="showSection('student-bus-section')">
                     <div class="icon">🚌</div>
-                    <h3 style="color: var(--primary-color);">خطوط نقل الطلاب</h3>
+                    <h3>خطوط نقل الطلاب</h3>
+                </div>
+                <!-- كارت نظام العائلة والأمان الجديد -->
+                <div class="card" onclick="showSection('family-circle-section')" style="border: 2px solid var(--primary-color); background: rgba(0,100,0,0.04);">
+                    <div class="icon">👨‍👩‍👧‍👦</div>
+                    <h3 style="color: var(--primary-color);">عائلة بصراوي (أمان)</h3>
                 </div>
                 <div class="card" onclick="showSection('tracking-section')">
                     <div class="icon">📍</div>
@@ -139,10 +144,36 @@
                 </div>
             </div>
         </div>
-        <!-- قسم خطوط نقل الطلاب والجامعات (الكيا والكوستر) -->
+        <!-- قسم عائلة بصراوي والأمان الذكي (Family Circle) -->
+        <div id="family-circle-section" class="section">
+            <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
+            <h2>👨‍👩‍👧‍👦 نظام عائلة بصراوي (الأمان والمشاركة)</h2>
+            <p style="font-size: 12px; opacity: 0.8; margin-bottom: 10px;">اربط حسابات عائلتك بمحفظة واحدة وتتبع وصولهم للجامعة والبيت بأمان تام.</p>
+
+            <div style="background: rgba(0,100,0,0.06); border: 1px solid var(--primary-color); padding: 12px; border-radius: 10px; margin-bottom: 12px;">
+                <h3 style="font-size: 13px; color: var(--primary-color); margin-bottom: 6px;">💼 المحفظة العائلية المشتركة:</h3>
+                <p style="font-size: 13px;">الرصيد العائلي المتاح: <strong id="family-wallet-balance" style="color: var(--secondary-color);">15,000 د.ع</strong></p>
+                <button class="btn" style="padding: 6px; font-size: 12px; margin-top: 8px;" onclick="allocateFamilyAllowance()">إرسال مصروف فوري لابن/ابنة (5,000 د.ع)</button>
+            </div>
+
+            <label style="font-size: 12px; font-weight: bold; display: block; margin-top: 8px;">➕ إضافة فرد جديد للعائلة (ابن / ابنة / زوجة):</label>
+            <input type="text" id="family-member-name" placeholder="اسم فرد العائلة (مثلاً: أحمد مجتبى)" style="font-size: 12px; margin: 4px 0;">
+            <input type="text" id="family-member-phone" placeholder="رقم هاتف المحمول (077xxxxxxxx)" style="font-size: 12px; margin: 4px 0;">
+            <button class="btn" style="background: #17a2b8; padding: 8px; font-size: 12px;" onclick="addFamilyMember()">ربط الحساب العائلي 🔗</button>
+
+            <h3 style="font-size: 13px; margin-top: 15px; margin-bottom: 6px;">📍 تتبع الأبناء والوصول الآمن:</h3>
+            <div id="family-members-list" style="background: rgba(0,0,0,0.03); padding: 10px; border-radius: 8px; font-size: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border-color);">
+                    <span>🎓 <b>أحمد</b> (مجمع كرمة علي)</span>
+                    <span style="color: var(--secondary-color); font-weight: bold;">✔ وصل بسلام (منذ 10 دقائق)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم خطوط نقل الطلاب والجامعات -->
         <div id="student-bus-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
-            <h2>🚌 خطوط وااشتراكات النقل الطلابي في البصرة</h2>
+            <h2>🚌 خطوط واشتراكات النقل الطلابي في البصرة</h2>
             <p style="font-size: 12px; opacity: 0.8; margin-bottom: 10px;">احجز خط كيا / كوستر مكيف من بيتك إلى كليتك أو مدرستك.</p>
 
             <label style="font-size: 12px; font-weight: bold;">اختر نوع الاشتراك الطلابي:</label>
@@ -152,23 +183,21 @@
             </select>
 
             <label style="font-size: 12px; font-weight: bold; margin-top: 6px; display: block;">منطقة الانطلاق (السكن):</label>
-            <input type="text" id="bus-pickup" placeholder="مثلاً: الجزائر، الجنينة، حيوية.." value="البصرة - الجزائر">
+            <input type="text" id="bus-pickup" placeholder="مثلاً: الجزائر، الجنينة.." value="البصرة - الجزائر">
 
-            <label style="font-size: 12px; font-weight: bold; margin-top: 6px; display: block;">الجهة التعليمية (المجمع الجامعي / المدرسة):</label>
+            <label style="font-size: 12px; font-weight: bold; margin-top: 6px; display: block;">الجهة التعليمية:</label>
             <select id="bus-destination" style="margin: 5px 0;">
                 <option value="karma">جامعة البصرة - مجمع كرمة علي</option>
                 <option value="zubair">جامعة البصرة - مجمع باب الزبير</option>
                 <option value="feniya">المعهد التقني / الكلية التقنية</option>
-                <option value="dorms">الأقسام الداخلية للطلاب</option>
             </select>
 
             <div style="background: rgba(0,100,0,0.05); border: 1px solid var(--primary-color); padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 12px;">
                 <span>المبلغ الكلي للاشتراك: </span><strong id="bus-total-price" style="color: var(--primary-color); font-size: 15px;">50,000 د.ع</strong>
             </div>
 
-            <!-- خريطة مسار الكيا/الباص الطلابي الحي -->
-            <label style="font-size: 12px; font-weight: bold;">🗺️ خريطة مسار الخط ونقاط التجمع القريبة:</label>
-            <div id="bus-route-map" style="height: 180px; border-radius: 10px; margin-top: 5px; border: 1px solid var(--primary-color); z-index: 1;"></div>
+            <label style="font-size: 12px; font-weight: bold;">🗺️ خريطة مسار الخط:</label>
+            <div id="bus-route-map" style="height: 160px; border-radius: 10px; margin-top: 5px; border: 1px solid var(--primary-color); z-index: 1;"></div>
 
             <button class="btn" onclick="subscribeStudentBus()">تأكيد واشتراك في الخط الآن 🎓</button>
         </div>
@@ -440,14 +469,6 @@
             if (currentHour >= 19 || currentHour < 6) {
                 document.body.setAttribute('data-theme', 'dark');
             }
-
-            if (navigator.getBattery) {
-                navigator.getBattery().then(battery => {
-                    if (battery.level < 0.2 && !battery.charging) {
-                        showToast('⚠️ انتبه: بطارية هاتفك ضعيفة (< 20%). تم تفعيل وضع الاستهلاك الخفيف.');
-                    }
-                });
-            }
         });
 
         function changeLanguage(lang) {
@@ -487,17 +508,12 @@
             }
         }
 
-        // تهيئة خريطة خطوط الكيا والنقل الطلابي
         function initBusRouteMap() {
             setTimeout(() => {
                 if (!busMap) {
                     busMap = L.map('bus-route-map').setView([30.5500, 47.7900], 12);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        maxZoom: 19,
-                        attribution: '© Basrawi Bus Route Map'
-                    }).addTo(busMap);
-
-                    L.marker([30.5300, 47.7900]).addTo(busMap).bindPopup('<b>محطة الجزائر</b> - انطلاق الخط الطلاب');
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(busMap);
+                    L.marker([30.5300, 47.7900]).addTo(busMap).bindPopup('<b>محطة الجزائر</b> - انطلاق الخط');
                     L.marker([30.5700, 47.7800]).addTo(busMap).bindPopup('<b>مجمع كرمة علي الجامعي 🎓</b>').openPopup();
                 } else {
                     busMap.invalidateSize();
@@ -505,22 +521,14 @@
             }, 300);
         }
 
-        // تهيئة وتشغيل الخريطة الحقيقية لمناطق البصرة عبر Leaflet
         function initRealBasraMap() {
             setTimeout(() => {
                 if (!basraMap) {
                     basraMap = L.map('real-basra-map').setView([30.5081, 47.7835], 13);
-                    
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        maxZoom: 19,
-                        attribution: '© Basrawi Map OpenStreetMap'
-                    }).addTo(basraMap);
-
-                    L.marker([30.5150, 47.8100]).addTo(basraMap).bindPopup('<b>منطقة العشار</b> - قلب التجارة');
-                    L.marker([30.5300, 47.7900]).addTo(basraMap).bindPopup('<b>منطقة الجزائر</b> - السكن والأسواق');
-                    L.marker([30.5500, 47.8200]).addTo(basraMap).bindPopup('<b>منطقة المعقل</b> - الشارع التجاري');
-
-                    carMarker = L.marker([30.5100, 47.8000]).addTo(basraMap).bindPopup('<b>الكابتن أبو حيدر</b> في الطريق إليك 🚕').openPopup();
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(basraMap);
+                    L.marker([30.5150, 47.8100]).addTo(basraMap).bindPopup('<b>منطقة العشار</b>');
+                    L.marker([30.5300, 47.7900]).addTo(basraMap).bindPopup('<b>منطقة الجزائر</b>');
+                    carMarker = L.marker([30.5100, 47.8000]).addTo(basraMap).bindPopup('<b>الكابتن أبو حيدر</b> في الطريق 🚕').openPopup();
                 } else {
                     basraMap.invalidateSize();
                 }
@@ -535,36 +543,50 @@
 
         function updateBusFare() {
             const plan = document.getElementById('bus-plan-type').value;
-            const priceEl = document.getElementById('bus-total-price');
-            if (plan === 'monthly') {
-                priceEl.innerText = "50,000 د.ع";
-            } else {
-                priceEl.innerText = "200,000 د.ع";
-            }
+            document.getElementById('bus-total-price').innerText = (plan === 'monthly') ? "50,000 د.ع" : "200,000 د.ع";
         }
 
         function subscribeStudentBus() {
             triggerVibration();
-            const dest = document.getElementById('bus-destination').options[document.getElementById('bus-destination').selectedIndex].text;
-            const priceText = document.getElementById('bus-total-price').innerText;
-            const cost = parseInt(priceText.replace(/[^0-9]/g, '')) || 50000;
-
+            let cost = document.getElementById('bus-plan-type').value === 'monthly' ? 50000 : 200000;
             if (walletBalance >= cost) {
                 walletBalance -= cost;
-                totalSpentMonth += cost;
                 document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
-                walletLogData.push(`[${getCurrentTimeString()}] - اشتراك خط طلابي: ${cost.toLocaleString()} د.ع`);
-                updateWalletLogUI();
-
-                showToast(`✅ تم الاشتراك بنجاح في خط (${dest})!`);
-                historyData.push(`اشتراك خط طلابي إلى (${dest}) بقيمة ${priceText}`);
-                loyaltyPoints += 40;
-                updateLoyaltyUI();
-                updateHistoryUI();
+                showToast('✅ تم الاشتراك في خط نقل الطلاب بنجاح!');
+                historyData.push(`اشتراك خط طلابي بقيمة ${cost.toLocaleString()} د.ع`);
                 showSection('home-section');
             } else {
-                showToast('رصيد المحفظة غير كافٍ للاشتراك!');
+                showToast('رصيد المحفظة غير كافٍ!');
                 showSection('wallet-section');
+            }
+        }
+
+        function allocateFamilyAllowance() {
+            triggerVibration();
+            if (walletBalance >= 5000) {
+                walletBalance -= 5000;
+                document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
+                document.getElementById('family-wallet-balance').innerText = walletBalance.toLocaleString();
+                showToast('🎁 تم إرسال مصروف 5,000 د.ع لمحفظة الابن بنجاح!');
+            } else {
+                showToast('رصيد المحفظة لا يكفي!');
+            }
+        }
+
+        function addFamilyMember() {
+            triggerVibration();
+            let name = document.getElementById('family-member-name').value.trim();
+            if (name) {
+                const list = document.getElementById('family-members-list');
+                list.innerHTML += `<div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border-color);">
+                    <span>👤 <b>${name}</b></span>
+                    <span style="color: var(--secondary-color); font-weight: bold;">✔ متصل ومحمي</span>
+                </div>`;
+                showToast(`تم ربط حساب (${name}) بنجاح عائلياً!`);
+                document.getElementById('family-member-name').value = '';
+                document.getElementById('family-member-phone').value = '';
+            } else {
+                showToast('يرجى إدخال اسم فرد العائلة.');
             }
         }
         function getGPSLocation() {
@@ -585,27 +607,19 @@
 
         function toggleFavorite(element, itemName) {
             triggerVibration();
-            if (element.innerText === '🤍') {
-                element.innerText = '❤️';
-                showToast(`تم إضافة (${itemName}) إلى قائمتك المفضلة!`);
-            } else {
-                element.innerText = '🤍';
-                showToast(`تم إزالة (${itemName}) من المفضلة.`);
-            }
+            element.innerText = (element.innerText === '🤍') ? '❤️' : '🤍';
+            showToast(`تم تحديث المفضلة لـ (${itemName})`);
         }
 
         function rateDish(dishName) {
             triggerVibration();
             let stars = prompt(`قيم طبق (${dishName}) من 1 إلى 5 نجوم ⭐:`, "5");
-            if (stars) {
-                showToast(`شكراً لتقييمك طبق ${dishName} بـ ${stars} نجوم!`);
-            }
+            if (stars) showToast(`شكراً لتقييمك طبق ${dishName}!`);
         }
 
         function shareReferralLink() {
             triggerVibration();
-            let text = encodeURIComponent("حمل تطبيق بصراوي Super-App واستخدم كود الدعوة الخاص بي للحصول على رصيد مجاني 2,000 د.ع! 🚕🍔");
-            window.open(`https://wa.me/?text=${text}`, '_blank');
+            window.open(`https://wa.me/?text=` + encodeURIComponent("حمل تطبيق بصراوي Super-App واستخدم كود الدعوة للحصول على رصيد مجاني!"), '_blank');
         }
 
         function quickOneTapOrder() {
@@ -618,16 +632,10 @@
             const dest = document.getElementById('destination').value.trim();
             if (dest.length > 1) {
                 let distanceKm = (dest.length * 1.8).toFixed(1);
-                let timeMins = Math.round(distanceKm * 2.5);
                 let calculatedFare = 3000 + (Math.round(distanceKm) * 350);
-
                 document.getElementById('est-distance').innerText = distanceKm + ' كم';
-                document.getElementById('est-time').innerText = timeMins + ' دقيقة';
+                document.getElementById('est-time').innerText = Math.round(distanceKm * 2.5) + ' دقيقة';
                 document.getElementById('fare-price').innerText = calculatedFare.toLocaleString() + ' د.ع';
-            } else {
-                document.getElementById('est-distance').innerText = '-- كم';
-                document.getElementById('est-time').innerText = '-- دقيقة';
-                document.getElementById('fare-price').innerText = '3,000 د.ع';
             }
         }
 
@@ -649,14 +657,13 @@
         function changeQty(index, delta) {
             triggerVibration();
             cart[index].qty += delta;
-            if (cart[index].qty <= 0) { cart.splice(index, 1); }
+            if (cart[index].qty <= 0) cart.splice(index, 1);
             updateCartUI();
         }
 
         function applyPromo() {
             triggerVibration();
-            const code = document.getElementById('promo-code').value.trim();
-            if (code.toUpperCase() === 'BASRA') {
+            if (document.getElementById('promo-code').value.trim().toUpperCase() === 'BASRA') {
                 discountRate = 0.2;
                 showToast('تم تطبيق كود الخصم (BASRA) بنجاح (-20%)!');
                 updateCartUI();
@@ -673,8 +680,7 @@
                 document.getElementById('low-balance-warning').style.display = 'none';
                 return;
             }
-            let html = '';
-            let total = 0;
+            let html = '', total = 0;
             cart.forEach((item, index) => {
                 total += (item.price * item.qty);
                 html += `<div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border-color); font-size: 13px;">
@@ -690,29 +696,17 @@
             container.innerHTML = html;
             let finalTotalRounded = Math.round(total);
             document.getElementById('cart-total').innerText = finalTotalRounded.toLocaleString();
-
-            if (walletBalance < finalTotalRounded) {
-                document.getElementById('low-balance-warning').style.display = 'block';
-            } else {
-                document.getElementById('low-balance-warning').style.display = 'none';
-            }
+            document.getElementById('low-balance-warning').style.display = (walletBalance < finalTotalRounded) ? 'block' : 'none';
         }
 
         function bookTaxi() {
             triggerVibration();
             const p = document.getElementById('pickup').value;
             const d = document.getElementById('destination').value;
-            const time = document.getElementById('schedule-time').value;
-            const tip = parseInt(document.getElementById('taxi-tip').value) || 0;
-            const pref = document.getElementById('driver-pref').value;
-            const note = document.getElementById('driver-note').value;
-            
             if(p && d) {
-                let msg = time ? `تم جدولة رحلة تكسي الساعة (${time})` : 'تم طلب الكابتن الفوري بنجاح!';
-                showToast(msg);
-                historyData.push(`رحلة تكسي (${pref}) من (${p}) إلى (${d})`);
+                showToast('تم طلب الكابتن الفوري بنجاح!');
+                historyData.push(`رحلة تكسي من (${p}) إلى (${d})`);
                 loyaltyPoints += 15;
-                updateLoyaltyUI();
                 updateHistoryUI();
                 showSection('tracking-section');
             } else { showToast('يرجى تحديد الانطلاق والوجهة.'); }
@@ -722,8 +716,6 @@
             triggerVibration();
             if (cart.length === 0) { showToast('السلة فارغة!'); return; }
             let total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
-            const foodNote = document.getElementById('food-special-note').value.trim();
-            const foodTime = document.getElementById('food-schedule-time').value;
             if (discountRate > 0) total = total * (1 - discountRate);
             total = Math.round(total);
             
@@ -731,15 +723,8 @@
                 walletBalance -= total;
                 totalSpentMonth += total;
                 document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
-                walletLogData.push(`[${getCurrentTimeString()}] - خصم طلب مطاعم: ${total.toLocaleString()} د.ع`);
-                updateWalletLogUI();
-
-                let timeInfo = foodTime ? ` [وصول مجدول: ${foodTime}]` : '';
-                showToast('تم الدفع وتأكيد الطلب بنجاح!' + timeInfo);
-                historyData.push(`طلب مطاعم بقيمة ${total.toLocaleString()} د.ع ${timeInfo} ${foodNote ? '[ملاحظة: '+foodNote+']' : ''}`);
-                loyaltyPoints += 25;
-                updateLoyaltyUI();
-                updateHistoryUI();
+                showToast('تم الدفع وتأكيد الطلب بنجاح!');
+                historyData.push(`طلب مطاعم بقيمة ${total.toLocaleString()} د.ع`);
                 cart = [];
                 discountRate = 0;
                 updateCartUI();
@@ -754,8 +739,7 @@
             triggerVibration();
             walletBalance += 10000;
             document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
-            walletLogData.push(`[${getCurrentTimeString()}] + شحن محفظة: 10,000 د.ع`);
-            updateWalletLogUI();
+            document.getElementById('family-wallet-balance').innerText = walletBalance.toLocaleString();
             updateCartUI();
             showToast('تم شحن المحفظة بـ 10,000 د.ع بنجاح!');
         }
@@ -766,101 +750,73 @@
             if(amount) {
                 walletBalance += parseInt(amount) || 0;
                 document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
-                walletLogData.push(`[${getCurrentTimeString()}] + إلكتروني (زين كاش): ${parseInt(amount).toLocaleString()} د.ع`);
-                updateWalletLogUI();
+                document.getElementById('family-wallet-balance').innerText = walletBalance.toLocaleString();
                 updateCartUI();
-                showToast(`تم شحن المحفظة بنجاح بقيمة ${parseInt(amount).toLocaleString()} د.ع!`);
+                showToast(`تم الشحن بنجاح بقيمة ${parseInt(amount).toLocaleString()} د.ع!`);
             }
         }
 
         function transferBalanceToFriend() {
             triggerVibration();
-            let phone = prompt("أدخل رقم هاتفك صديقك المراد التحويل إليه:", "077xxxxxxxx");
+            let phone = prompt("أدخل رقم هاتف صديقك المراد التحويل إليه:", "077xxxxxxxx");
             let amt = prompt("أدخل المبلغ المراد تحويله (د.ع):", "5000");
-            if(phone && amt) {
-                let val = parseInt(amt) || 0;
-                if(walletBalance >= val) {
-                    walletBalance -= val;
-                    document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
-                    walletLogData.push(`[${getCurrentTimeString()}] - تحويل لصديق (${phone}): ${val.toLocaleString()} د.ع`);
-                    updateWalletLogUI();
-                    showToast(`تم تحويل مبلغ ${val.toLocaleString()} د.ع بنجاح إلى الرقم ${phone}`);
-                } else {
-                    showToast('رصيدك الحالي لا يكفي لإتمام التحويل!');
-                }
+            if(phone && amt && walletBalance >= parseInt(amt)) {
+                walletBalance -= parseInt(amt);
+                document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
+                showToast(`تم تحويل مبلغ ${amt} د.ع بنجاح إلى الرقم ${phone}`);
+            } else {
+                showToast('فشل التحويل، تحقق من الرصيد.');
             }
         }
 
         function openGroupOrderModal() {
             triggerVibration();
-            let link = "https://basrawi-app.web.app/group?room=basra-" + Math.floor(Math.random()*9000+1000);
-            prompt("👥 تم إنشاء رابط السلة الجماعية بنجاح! انسخه وأرسله لأصدقائك:", link);
+            prompt("👥 تم إنشاء رابط السلة الجماعية بنجاح! انسخه وأرسله لأصدقائك:", "https://basrawi-app.web.app/group?room=basra-" + Math.floor(Math.random()*9000+1000));
         }
 
         function showMonthlyAnalytics() {
             triggerVibration();
-            alert(`📊 تحليل المصاريف الشهرية:\n\n• إجمالي مصاريفك هذا الشهر: ${totalSpentMonth.toLocaleString()} د.ع\n• مجموع التوفير عبر كوبونات الخصم: 12,500 د.ع\n• الخدمة الأكثر استخداماً: حجز التكسي\n• تقييم حسابك: عميل VIP ذهبي ⭐`);
+            alert(`📊 تحليل المصاريف الشهرية:\n\n• إجمالي مصاريفك هذا الشهر: ${totalSpentMonth.toLocaleString()} د.ع\n• التوفير عبر الكوبونات: 12,500 د.ع\n• تقييم حسابك: عميل VIP ذهبي ⭐`);
         }
 
         function shareLiveLocationWhatsApp() {
             triggerVibration();
-            let txt = encodeURIComponent("أنا في رحلة تكسي حالياً عبر تطبيق بصراوي في شوارع البصرة. هذا رابط تتبعي المباشر.");
-            window.open(`https://wa.me/?text=${txt}`, '_blank');
+            window.open(`https://wa.me/?text=` + encodeURIComponent("أنا في رحلة تكسي حالياً عبر تطبيق بصراوي في شوارع البصرة."), '_blank');
         }
 
         function giveDigitalTip() {
             triggerVibration();
             let tipAmt = prompt("اختر أو اكتب قيمة الإكرامية للكابتن (د.ع):", "2000");
-            if(tipAmt) {
-                showToast(`تم إرسال إكرامية بقيمة ${parseInt(tipAmt).toLocaleString()} د.ع لمحفظة الكابتن بنجاح! 🎁`);
-            }
+            if(tipAmt) showToast(`تم إرسال إكرامية بقيمة ${tipAmt} د.ع للكابتن بنجاح! 🎁`);
         }
 
         function triggerSOSAlert() {
             triggerVibration();
-            if(confirm("🚨 هل أنت متأكد من رغبتك في إرسال إشارة طوارئ SOS لمركز المساعدة والأمان في البصرة؟")) {
-                showToast("⚠️ تم إرسال إشارة الطوارئ وموقعك الحالي لعمليات بصراوي بنجاح. سيتم الاتصال بك فوراً!");
+            if(confirm("🚨 هل أنت متأكد من رغبتك في إرسال إشارة طوارئ SOS لعمليات البصرة؟")) {
+                showToast("⚠️ تم إرسال إشارة الطوارئ وموقعك لعمليات بصراوي. سيتم الاتصال بك فوراً!");
             }
         }
 
         function startVoiceSearch() {
             triggerVibration();
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                showToast("🎤 جاري الاستماع... اطلب وجهتك أو طعامك الآن");
-                setTimeout(() => {
-                    document.getElementById('destination').value = "منطقة العشار (بحث صوتي)";
-                    calculateDistanceAndFare();
-                    showSection('taxi-section');
-                    showToast("✅ تم التعرف على وجهتك: العشار");
-                }, 2500);
-            } else {
-                showToast("المساعد الصوتي غير متوفر في هذا المتصفح.");
-            }
-        }
-
-        function updateWalletLogUI() {
-            const logContainer = document.getElementById('wallet-log');
-            let html = '';
-            walletLogData.forEach(item => {
-                html += `<p style="margin: 2px 0;">${item}</p>`;
-            });
-            logContainer.innerHTML = html;
+            showToast("🎤 جاري الاستماع... اطلب وجهتك الآن");
+            setTimeout(() => {
+                document.getElementById('destination').value = "منطقة العشار (بحث صوتي)";
+                calculateDistanceAndFare();
+                showSection('taxi-section');
+                showToast("✅ تم التعرف على وجهتك: العشار");
+            }, 2500);
         }
 
         function saveProfile() { triggerVibration(); showToast('تم حفظ بيانات الحساب بنجاح!'); }
         function rateService() { triggerVibration(); showToast('شكراً لتقييمك!'); }
-        function promptCancelReason() {
-            let r = prompt("اختر سبب الإلغاء:\n1. تأخر الكابتن\n2. غيرت رأيي", "غيرت رأيي");
-            if(r) { showToast('تم إلغاء الطلب بنجاح.'); showSection('home-section'); }
-        }
 
         function sendChatMessage() {
-            let input = document.getElementById('chat-input');
-            let box = document.getElementById('chat-messages');
+            let input = document.getElementById('chat-input'), box = document.getElementById('chat-messages');
             if (input.value.trim() !== '') {
                 box.innerHTML += `<p style="margin: 5px 0; text-align: right;"><b>أنت:</b> ${input.value}</p>`;
                 setTimeout(() => {
-                    box.innerHTML += `<p style="margin: 5px 0; color: var(--secondary-color);"><b>الكابتن:</b> وصلتي رسالتك، ثواني وأكون يمك!</p>`;
+                    box.innerHTML += `<p style="margin: 5px 0; color: var(--secondary-color);"><b>الكابتن:</b> ثواني وأكون يمك!</p>`;
                     box.scrollTop = box.scrollHeight;
                 }, 1000);
                 input.value = '';
@@ -875,13 +831,11 @@
             etaTimer = setInterval(() => {
                 if (rem <= 0) { el.innerText = "الكابتن وصل الآن! 🚗"; clearInterval(etaTimer); return; }
                 rem--;
-                let m = Math.floor(rem / 60), s = rem % 60;
-                el.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')} دقيقة`;
+                el.innerText = `${Math.floor(rem / 60).toString().padStart(2, '0')}:${(rem % 60).toString().padStart(2, '0')} دقيقة`;
             }, 1000);
         }
         function stopETACountdown() { if (etaTimer) { clearInterval(etaTimer); etaTimer = null; } }
 
-        function updateLoyaltyUI() { document.getElementById('loyalty-points').innerText = loyaltyPoints; }
         function updateHistoryUI() {
             const container = document.getElementById('history-list');
             if (historyData.length === 0) return;
@@ -889,7 +843,7 @@
             historyData.forEach(h => { 
                 html += `<div style="padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 8px; font-size: 13px; display: flex; justify-content: space-between; align-items: center;">
                     <span>✅ ${h}</span>
-                    <button onclick="showSection('cart-section')" style="padding: 4px 8px; background: var(--secondary-color); color: white; border: none; border-radius: 4px; font-size: 11px; cursor: pointer;">إعادة طلب</button>
+                    <button onclick="showSection('cart-section')" style="padding: 4px 8px; background: var(--secondary-color); color: white; border: none; border-radius: 4px; font-size: 11px; cursor: pointer;">إعادة</button>
                 </div>`; 
             });
             container.innerHTML = html;
