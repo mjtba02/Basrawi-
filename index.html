@@ -6,7 +6,6 @@
     <title>بصراوي - Basrawi Super-App</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#006400">
-    <!-- استدعاء مكتبة الخرائط الحقيقية Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <style>
         :root {
@@ -116,10 +115,9 @@
                     <div class="icon">🍔</div>
                     <h3 id="t-restaurants">المطاعم والطعام</h3>
                 </div>
-                <!-- كارت دزلي وجيبلي المضاف حديثاً -->
                 <div class="card" onclick="showSection('courier-section')" style="border: 2px solid var(--primary-color); background: rgba(0,100,0,0.04);">
                     <div class="icon">📦</div>
-                    <h3 style="color: var(--primary-color);">دزلي وجيبلي (أغراض)</h3>
+                    <h3 style="color: var(--primary-color);">دزلي وجيبلي</h3>
                 </div>
                 <div class="card" onclick="showSection('student-bus-section')">
                     <div class="icon">🚌</div>
@@ -143,55 +141,53 @@
                 </div>
             </div>
         </div>
-        <!-- قسم دزلي وجيبلي (المساعد الشخصي وتوصيل الأغراض) -->
+        <!-- قسم دزلي وجيبلي -->
         <div id="courier-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>📦 خدمة (دزلي وجيبلي) الشخصية</h2>
-            <p style="font-size: 12px; opacity: 0.8; margin-bottom: 10px;">إرسال أو جلب أي اغراض شخصية (مفاتيح، علاج، مستندات، هدايا) في البصرة.</p>
+            <p style="font-size: 12px; opacity: 0.8; margin-bottom: 10px;">إرسال أو جلب أي أغراض شخصية (مفاتيح، علاج، مستندات) في البصرة.</p>
 
-            <label style="font-size: 12px; font-weight: bold;">نوع الغرض المراد نقل أو شراؤه:</label>
+            <label style="font-size: 12px; font-weight: bold;">نوع الغرض:</label>
             <select id="courier-item-type" style="margin: 5px 0;">
-                <option value="keys">🔑 مفاتيح / أغراض شخصية نسيتها</option>
-                <option value="docs">📄 مستندات / أوراق مهمة</option>
-                <option value="medicine">💊 علاج من الصيدلية</option>
-                <option value="gift">🎁 هدية / باقة ورد</option>
-                <option value="custom">📦 غرض آخر (اذكره بالملاحظات)</option>
+                <option value="keys">🔑 مفاتيح / أغراض شخصية</option>
+                <option value="docs">📄 مستندات وأوراق</option>
+                <option value="medicine">💊 علاج طبي من الصيدلية</option>
+                <option value="gift">🎁 هدية أو باقة ورد</option>
             </select>
 
-            <label style="font-size: 12px; font-weight: bold; margin-top: 6px; display: block;">مكان استلام الغرض (منين نجيبه؟):</label>
-            <input type="text" id="courier-pickup" placeholder="عنوان الاستلام (مثلاً: بيت بالجزائر، صيدلية بالعشار..)">
+            <label style="font-size: 12px; font-weight: bold; margin-top: 6px; display: block;">مكان الاستلام (منين نجيبه؟):</label>
+            <input type="text" id="courier-pickup" placeholder="عنوان الاستلام (الجزائر، العشار..)">
 
             <label style="font-size: 12px; font-weight: bold; margin-top: 6px; display: block;">مكان التسليم (لوين ندزه؟):</label>
-            <input type="text" id="courier-dropoff" placeholder="عنوان التسليم (مثلاً: الدائرة بالمعقل، جامعة البصرة..)">
+            <input type="text" id="courier-dropoff" placeholder="عنوان التسليم (المعقل، جامعة البصرة..)">
 
-            <textarea id="courier-notes" placeholder="تفاصيل إضافية للمندوب (اسم المستلم، أرقام هواتف، ملاحظات خاصة..)" style="height: 50px; font-size: 12px;"></textarea>
+            <textarea id="courier-notes" placeholder="ملاحظات للمندوب أو أرقام هواتف..." style="height: 45px; font-size: 12px;"></textarea>
 
-            <div style="background: rgba(0,100,0,0.05); border: 1px solid var(--primary-color); padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
-                <span>أجرة التوصيل التقديرية:</span>
-                <strong id="courier-fare" style="color: var(--primary-color); font-size: 15px;">3,500 د.ع</strong>
+            <div style="background: rgba(0,100,0,0.05); border: 1px solid var(--primary-color); padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 12px; display: flex; justify-content: space-between;">
+                <span>أجرة التوصيل:</span>
+                <strong style="color: var(--primary-color);">3,500 د.ع</strong>
             </div>
 
             <button class="btn" onclick="requestCourierService()">اطلب المندوب الآن 🚴‍♂️</button>
         </div>
 
-        <!-- قسم عائلة بصراوي والأمان الذكي (Family Circle) -->
+        <!-- قسم عائلة بصراوي والأمان الذكي -->
         <div id="family-circle-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
-            <h2>👨‍👩‍👧‍👦 نظام عائلة بصراوي (الأمان والمشاركة)</h2>
+            <h2>👨‍👩‍👧‍👦 نظام عائلة بصراوي (الأمان)</h2>
             <p style="font-size: 12px; opacity: 0.8; margin-bottom: 10px;">اربط حسابات عائلتك بمحفظة واحدة وتتبع وصولهم بسلام.</p>
 
             <div style="background: rgba(0,100,0,0.06); border: 1px solid var(--primary-color); padding: 12px; border-radius: 10px; margin-bottom: 12px;">
                 <h3 style="font-size: 13px; color: var(--primary-color); margin-bottom: 6px;">💼 المحفظة العائلية المشتركة:</h3>
-                <p style="font-size: 13px;">الرصيد العائلي المتاح: <strong id="family-wallet-balance" style="color: var(--secondary-color);">15,000 د.ع</strong></p>
-                <button class="btn" style="padding: 6px; font-size: 12px; margin-top: 8px;" onclick="allocateFamilyAllowance()">إرسال مصروف فوري لابن/ابنة (5,000 د.ع)</button>
+                <p style="font-size: 13px;">الرصيد المتاح: <strong id="family-wallet-balance" style="color: var(--secondary-color);">15,000 د.ع</strong></p>
+                <button class="btn" style="padding: 6px; font-size: 12px; margin-top: 8px;" onclick="allocateFamilyAllowance()">إرسال مصروف لابن/ابنة (5,000 د.ع)</button>
             </div>
 
-            <label style="font-size: 12px; font-weight: bold; display: block; margin-top: 8px;">➕ إضافة فرد جديد للعائلة:</label>
+            <label style="font-size: 12px; font-weight: bold; display: block; margin-top: 8px;">➕ إضافة فرد جديد:</label>
             <input type="text" id="family-member-name" placeholder="اسم فرد العائلة" style="font-size: 12px; margin: 4px 0;">
-            <input type="text" id="family-member-phone" placeholder="رقم الهاتف (077xxxxxxxx)" style="font-size: 12px; margin: 4px 0;">
-            <button class="btn" style="background: #17a2b8; padding: 8px; font-size: 12px;" onclick="addFamilyMember()">ربط الحساب العائلي 🔗</button>
+            <button class="btn" style="background: #17a2b8; padding: 8px; font-size: 12px;" onclick="addFamilyMember()">ربط الحساب 🔗</button>
 
-            <h3 style="font-size: 13px; margin-top: 15px; margin-bottom: 6px;">📍 تتبع الأبناء والوصول الآمن:</h3>
+            <h3 style="font-size: 13px; margin-top: 15px; margin-bottom: 6px;">📍 تتبع الأبناء:</h3>
             <div id="family-members-list" style="background: rgba(0,0,0,0.03); padding: 10px; border-radius: 8px; font-size: 12px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0;">
                     <span>🎓 <b>أحمد</b> (مجمع كرمة علي)</span>
@@ -199,75 +195,62 @@
                 </div>
             </div>
         </div>
-        <!-- قسم خطوط نقل الطلاب والجامعات -->
+        <!-- قسم خطوط نقل الطلاب -->
         <div id="student-bus-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>🚌 خطوط واشتراكات النقل الطلابي في البصرة</h2>
-            <p style="font-size: 12px; opacity: 0.8; margin-bottom: 10px;">احجز خط كيا / كوستر مكيف من بيتك إلى كليتك أو مدرستك.</p>
+            <p style="font-size: 12px; opacity: 0.8; margin-bottom: 10px;">احجز خط كيا / كوستر مكيف من بيتك إلى كليتك.</p>
 
-            <label style="font-size: 12px; font-weight: bold;">اختر نوع الاشتراك الطلابي:</label>
+            <label style="font-size: 12px; font-weight: bold;">اختر الاشتراك:</label>
             <select id="bus-plan-type" onchange="updateBusFare()" style="margin: 5px 0;">
-                <option value="monthly">📅 اشتراك شهري (50,000 د.ع / شهر)</option>
-                <option value="yearly">🎓 اشتراك سنوي/فصلي (200,000 د.ع / الفصل الدراسي)</option>
+                <option value="monthly">📅 اشتراك شهري (50,000 د.ع)</option>
+                <option value="yearly">🎓 اشتراك فصلي (200,000 د.ع)</option>
             </select>
 
             <label style="font-size: 12px; font-weight: bold; margin-top: 6px; display: block;">منطقة الانطلاق (السكن):</label>
-            <input type="text" id="bus-pickup" placeholder="مثلاً: الجزائر، الجنينة.." value="البصرة - الجزائر">
+            <input type="text" id="bus-pickup" value="البصرة - الجزائر">
 
             <label style="font-size: 12px; font-weight: bold; margin-top: 6px; display: block;">الجهة التعليمية:</label>
             <select id="bus-destination" style="margin: 5px 0;">
                 <option value="karma">جامعة البصرة - مجمع كرمة علي</option>
                 <option value="zubair">جامعة البصرة - مجمع باب الزبير</option>
-                <option value="feniya">المعهد التقني / الكلية التقنية</option>
             </select>
 
             <div style="background: rgba(0,100,0,0.05); border: 1px solid var(--primary-color); padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 12px;">
-                <span>المبلغ الكلي للااشتراك: </span><strong id="bus-total-price" style="color: var(--primary-color); font-size: 15px;">50,000 د.ع</strong>
+                <span>المبلغ الكلي: </span><strong id="bus-total-price" style="color: var(--primary-color); font-size: 15px;">50,000 د.ع</strong>
             </div>
 
             <label style="font-size: 12px; font-weight: bold;">🗺️ خريطة مسار الخط:</label>
-            <div id="bus-route-map" style="height: 160px; border-radius: 10px; margin-top: 5px; border: 1px solid var(--primary-color); z-index: 1;"></div>
+            <div id="bus-route-map" style="height: 150px; border-radius: 10px; margin-top: 5px; border: 1px solid var(--primary-color); z-index: 1;"></div>
 
-            <button class="btn" onclick="subscribeStudentBus()">تأكيد واشتراك في الخط الآن 🎓</button>
+            <button class="btn" onclick="subscribeStudentBus()">تأكيد واشتراك بالخط 🎓</button>
         </div>
 
-        <!-- قسم التكسي المتقدم -->
+        <!-- قسم التكسي الذكي -->
         <div id="taxi-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>حجز رحلة تكسي ذكية</h2>
-
-            <div style="background: rgba(0,100,0,0.06); border: 1px solid var(--primary-color); padding: 8px; border-radius: 8px; margin-bottom: 10px; font-size: 12px; display: flex; align-items: center; justify-content: space-between;">
-                <div>🏆 <b>كابتن الشهر:</b> أبو حيدر (4.9 ⭐)</div>
-                <span style="font-size: 10px; background: var(--primary-color); color: white; padding: 2px 6px; border-radius: 4px;">الأعلى تقييماً</span>
-            </div>
 
             <div style="display: flex; gap: 5px;">
                 <input type="text" id="pickup" placeholder="موقع الانطلاق (العشار، الجزائر..)" style="flex: 1;">
                 <button class="btn" style="width: auto; margin-top: 6px;" onclick="getGPSLocation()">📍 GPS</button>
             </div>
-            
-            <div style="margin-bottom: 5px;">
-                <span class="quick-tag" onclick="setSavedAddress('pickup', 'البيت (الجزائر)')">🏠 البيت</span>
-                <span class="quick-tag" onclick="setSavedAddress('pickup', 'العمل (المعقل)')">💼 العمل</span>
-                <span class="quick-tag" onclick="setSavedAddress('pickup', 'بيت الأهل (العشار)')">👨‍👩‍👦 بيت الأهل</span>
-            </div>
 
-            <input type="text" id="destination" placeholder="وجهة الوصول (مثلاً: التنومة، المعقل..)" oninput="calculateDistanceAndFare()">
-            
+            <input type="text" id="destination" placeholder="وجهة الوصول (التنومة، المعقل..)" oninput="calculateDistanceAndFare()">
+
             <div style="background: rgba(0,0,0,0.03); padding: 8px; border-radius: 6px; margin: 5px 0; font-size: 12px; display: flex; justify-content: space-between;">
                 <span>📏 المسافة: <strong id="est-distance">-- كم</strong></span>
-                <span>⏱️ الوقت المقدر: <strong id="est-time">-- دقيقة</strong></span>
+                <span>⏱️ الوقت: <strong id="est-time">-- دقيقة</strong></span>
             </div>
 
             <select id="driver-pref" style="margin: 5px 0; font-size: 12px;">
                 <option value="normal">تفضيلات الكابتن: عادي</option>
-                <option value="family">🧕 تكسي العائلات (سائق عائلي)</option>
+                <option value="family">🧕 تكسي العائلات</option>
                 <option value="ac">سيارة مكيفة بالكامل ❄️</option>
-                <option value="quiet">كابتن هادئ 🚭</option>
             </select>
 
             <div style="background: rgba(0,0,0,0.03); padding: 10px; border-radius: 8px; margin: 8px 0; font-size: 13px;">
-                <span>الأجرة التقديرية النهائية: </span><strong id="fare-price" style="color: var(--secondary-color);">3,000 د.ع</strong>
+                <span>الأجرة التقديرية: </span><strong id="fare-price" style="color: var(--secondary-color);">3,000 د.ع</strong>
             </div>
             <button class="btn" onclick="bookTaxi()">اطلب الكابتن الآن</button>
         </div>
@@ -281,12 +264,9 @@
                     <option value="all">جميع التصنيفات</option>
                     <option value="grill">مشاوي بصرية</option>
                     <option value="fastfood">وجبات سريعة</option>
-                    <option value="diet">🥗 وجبات صحية ودائت</option>
                 </select>
-                <button class="btn" style="width: auto; margin: 0; padding: 8px 12px; background: #17a2b8; font-size: 11px;" onclick="openGroupOrderModal()">👥 طلب جماعي</button>
+                <button class="btn" style="width: auto; margin: 0; padding: 8px; background: #17a2b8; font-size: 11px;" onclick="openGroupOrderModal()">👥 طلب جماعي</button>
             </div>
-            
-            <textarea id="food-special-note" placeholder="ملاحظات خاصة للطعام (بدون بصل، حار..)" style="margin-bottom: 5px; height: 40px; font-size: 12px;"></textarea>
 
             <div id="restaurants-list" style="margin-top: 5px;">
                 <div class="restaurant-item" data-category="grill">
@@ -306,7 +286,7 @@
             </div>
         </div>
 
-        <!-- قسم سلة التسوق -->
+        <!-- سلة التسوق -->
         <div id="cart-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>سلة الطلبات والخصومات</h2>
@@ -317,7 +297,10 @@
                 <input type="text" id="promo-code" placeholder="كود الخصم (BASRA)" style="margin:0; flex: 1;">
                 <button class="btn" style="width: auto; margin: 0; padding: 8px 12px;" onclick="applyPromo()">تطبيق</button>
             </div>
-        <!-- قسم المحفظة والمالية -->
+            <p style="font-weight: bold; margin-top: 10px;">المجموع النهائي: <span id="cart-total">0</span> د.ع</p>
+            <button class="btn" onclick="checkout()">تأكيد وإرسال الطلب</button>
+        </div>
+        <!-- المحفظة والمالية -->
         <div id="wallet-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>محفظة بصراوي 💰</h2>
@@ -328,36 +311,36 @@
             
             <div style="display: flex; gap: 5px;">
                 <button class="btn" style="flex: 1; margin: 0;" onclick="rechargeWallet()">شحن افتراضي</button>
-                <button class="btn" style="flex: 1; margin: 0; background: #ffc107; color: #000;" onclick="openPaymentGateway()">💳 زين كاش / ماستر</button>
+                <button class="btn" style="flex: 1; margin: 0; background: #ffc107; color: #000;" onclick="openPaymentGateway()">💳 زين كاش</button>
             </div>
 
-            <button class="btn" style="background: #17a2b8; margin-top: 8px; padding: 8px; font-size: 12px;" onclick="transferBalanceToFriend()">💸 تحويل رصيد لصديق</button>
+            <button class="btn" style="background: #17a2b8; margin-top: 8px; padding: 8px; font-size: 12px;" onclick="transferBalanceToFriend()">💸 تحويل لصديق</button>
 
-            <h3 style="font-size: 13px; margin-top: 12px; margin-bottom: 4px;">📜 سجل المعاملات المالية:</h3>
-            <div id="wallet-log" style="background: rgba(0,0,0,0.03); padding: 8px; border-radius: 8px; max-height: 80px; overflow-y: auto; font-size: 11px;">
-                <p style="color: #666;">+ إيداع افتراضي: 15,000 د.ع</p>
+            <h3 style="font-size: 12px; margin-top: 12px; margin-bottom: 4px;">سجل المعاملات:</h3>
+            <div id="wallet-log" style="background: rgba(0,0,0,0.03); padding: 8px; border-radius: 8px; max-height: 70px; overflow-y: auto; font-size: 11px;">
+                <p>+ إيداع افتراضي: 15,000 د.ع</p>
             </div>
         </div>
 
-        <!-- قسم الملف الشخصي -->
+        <!-- الملف الشخصي -->
         <div id="profile-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
-            <h2>الملف الشخصي والعناوين المحفوظة</h2>
-            <input type="text" id="user-name" value="مجتبى مازن" placeholder="الاسم الكامل">
-            <input type="text" id="user-phone" value="07700000000" placeholder="رقم الهاتف">
-            <input type="text" id="user-address" value="البصرة - الجزائر" placeholder="عنوان البيت الأساسي">
-            <button class="btn
-        <!-- قسم التتبع والخريطة الحقيقية للبصرة -->
+            <h2>الملف الشخصي والعناوين</h2>
+            <input type="text" id="user-name" value="مجتبى مازن">
+            <input type="text" id="user-phone" value="07700000000">
+            <button class="btn" onclick="saveProfile()">حفظ التعديلات</button>
+            <button class="btn" style="background: #6f42c1; margin-top: 8px;" onclick="showMonthlyAnalytics()">📊 تحليل المصاريف الشهرية</button>
+        </div>
+        <!-- تتبع الطلب والخريطة الحقيقية -->
         <div id="tracking-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
-            <h2>تتبع رحلتك أو طلبك في شوارع البصرة</h2>
-            <p style="margin-top: 6px;">حالة الطلب: <strong id="order-status-text" style="color: var(--secondary-color);">الكابتن تتحرك في شوارع البصرة</strong></p>
-            <p style="font-size: 12px; margin-top: 4px; background: rgba(0,100,0,0.08); padding: 5px; border-radius: 6px; text-align: center;">🔐 رمز التحقق (PIN): <strong id="order-pin-code" style="color: var(--primary-color); letter-spacing: 2px;">4821</strong></p>
+            <h2>تتبع رحلتك أو طلبك في البصرة</h2>
+            <p style="margin-top: 6px;">الحالة: <strong style="color: var(--secondary-color);">الكابتن يتحرك في شوارع البصرة</strong></p>
             
-            <div id="real-basra-map" style="height: 220px; border-radius: 12px; margin-top: 8px; border: 2px solid var(--primary-color); z-index: 1;"></div>
+            <div id="real-basra-map" style="height: 200px; border-radius: 12px; margin-top: 8px; border: 2px solid var(--primary-color); z-index: 1;"></div>
 
-            <div style="display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap;">
-                <button class="btn" style="background: #25d366; margin: 0; padding: 6px; font-size: 11px; flex: 1;" onclick="shareLiveLocationWhatsApp()">📤 مشاركة موقعي</button>
+            <div style="display: flex; gap: 4px; margin-top: 8px;">
+                <button class="btn" style="background: #25d366; margin: 0; padding: 6px; font-size: 11px; flex: 1;" onclick="shareLiveLocationWhatsApp()">📤 مشاركة الموقع</button>
                 <button class="btn" style="background: #dc3545; margin: 0; padding: 6px; font-size: 11px; flex: 1;" onclick="triggerSOSAlert()">🚨 طوارئ SOS</button>
             </div>
         </div>
@@ -365,22 +348,19 @@
         <div id="receipt-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرئيسية</button>
             <h2>🧾 إيصال الدفع الرقمي</h2>
-            <div id="receipt-content" style="background: rgba(0,0,0,0.03); padding: 12px; border-radius: 8px; margin: 10px 0; font-size: 13px;">
-                <p>رقم الإيصال: #BAS-9821</p>
-                <p>الحالة: مدفوع بنجاح عبر محفظة بصراوي</p>
-            </div>
-            <button class="btn" onclick="showSection('home-section')">تم، العودة للرئيسية</button>
+            <p style="margin: 10px 0; font-size: 13px;">تم الدفع بنجاح عبر محفظة بصراوي.</p>
+            <button class="btn" onclick="showSection('home-section')">تم، العودة</button>
         </div>
 
         <div id="chat-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>الدردشة الفورية مع الكابتن</h2>
-            <div id="chat-messages" style="background: rgba(0,0,0,0.03); height: 130px; border-radius: 8px; padding: 10px; margin: 10px 0; overflow-y: auto; font-size: 13px;">
-                <p style="color: #666; text-align: center;">أهلاً بك، ابدأ المراسلة مع الكابتن هنا...</p>
+            <div id="chat-messages" style="background: rgba(0,0,0,0.03); height: 120px; border-radius: 8px; padding: 10px; margin: 10px 0; overflow-y: auto; font-size: 13px;">
+                <p style="color: #666; text-align: center;">أهلاً بك، ابدأ المراسلة هنا...</p>
             </div>
             <div style="display: flex; gap: 5px;">
                 <input type="text" id="chat-input" placeholder="اكتب رسالتك..." style="margin: 0; flex: 1;">
-                <button class="btn" style="width: auto; margin: 0; padding: 8px 15px;" onclick="sendChatMessage()">إرسال</button>
+                <button class="btn" style="width: auto; margin: 0; padding: 8px 12px;" onclick="sendChatMessage()">إرسال</button>
             </div>
         </div>
 
@@ -388,16 +368,15 @@
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
             <h2>سجل الطلبات والرحلات</h2>
             <div id="history-list" style="margin-top: 10px;">
-                <p style="text-align: center; opacity: 0.6; padding: 15px;">لا توجد طلبات سابقة مسجلة</p>
+                <p style="text-align: center; opacity: 0.6; padding: 15px;">لا توجد طلبات سابقة</p>
             </div>
         </div>
     </div>
-    <!-- استدعاء مكتبة Leaflet JavaScript للخرائط الحقيقية -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
         let cart = [];
         let historyData = [];
-        let walletLogData = [`[${getCurrentTimeString()}] + إيداع افتراضي: 15,000 د.ع`];
+        let walletLogData = [`إيداع افتراضي: 15,000 د.ع`];
         let walletBalance = 15000;
         let loyaltyPoints = 120;
         let discountRate = 0;
@@ -405,16 +384,11 @@
         let basraMap = null;
         let busMap = null;
 
-        function getCurrentTimeString() {
-            const now = new Date();
-            return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        }
-
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
                 if (splash) { splash.style.opacity = '0'; setTimeout(() => splash.remove(), 500); }
-            }, 1200);
+            }, 1000);
         });
 
         function showSection(sectionId) {
@@ -426,43 +400,13 @@
             else if (sectionId === 'student-bus-section') { initBusRouteMap(); }
         }
 
-        function requestCourierService() {
-            triggerVibration();
-            const pickup = document.getElementById('courier-pickup').value.trim();
-            const dropoff = document.getElementById('courier-dropoff').value.trim();
-            const typeText = document.getElementById('courier-item-type').options[document.getElementById('courier-item-type').selectedIndex].text;
-            const cost = 3500;
-
-            if (pickup && dropoff) {
-                if (walletBalance >= cost) {
-                    walletBalance -= cost;
-                    totalSpentMonth += cost;
-                    document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
-                    walletLogData.push(`[${getCurrentTimeString()}] - طلب دزلي وجيبلي: 3,500 د.ع`);
-                    updateWalletLogUI();
-
-                    showToast(`✅ تم طلب المندوب لنقل (${typeText}) بنجاح!`);
-                    historyData.push(`خدمة دزلي وجيبلي: من (${pickup}) إلى (${dropoff})`);
-                    loyaltyPoints += 20;
-                    updateLoyaltyUI();
-                    updateHistoryUI();
-                    showSection('tracking-section');
-                } else {
-                    showToast('رصيد المحفظة غير كافٍ للطلب!');
-                    showSection('wallet-section');
-                }
-            } else {
-                showToast('يرجى كتابة عنوان الاستلام والتسليم.');
-            }
-        }
-
         function initBusRouteMap() {
             setTimeout(() => {
                 if (!busMap) {
                     busMap = L.map('bus-route-map').setView([30.5500, 47.7900], 12);
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(busMap);
                     L.marker([30.5300, 47.7900]).addTo(busMap).bindPopup('محطة الجزائر');
-                    L.marker([30.5700, 47.7800]).addTo(busMap).bindPopup('مجمع كرمة علي الجامعي 🎓');
+                    L.marker([30.5700, 47.7800]).addTo(busMap).bindPopup('مجمع كرمة علي 🎓');
                 } else { busMap.invalidateSize(); }
             }, 300);
         }
@@ -472,21 +416,89 @@
                 if (!basraMap) {
                     basraMap = L.map('real-basra-map').setView([30.5081, 47.7835], 13);
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(basraMap);
-                    L.marker([30.5150, 47.8100]).
+                    L.marker([30.5150, 47.8100]).addTo(basraMap).bindPopup('منطقة العشار');
+                    L.marker([30.5300, 47.7900]).addTo(basraMap).bindPopup('منطقة الجزائر');
+                } else { basraMap.invalidateSize(); }
+            }, 300);
+        }
+
+        function toggleDarkMode() {
+            triggerVibration();
+            const body = document.body;
+            body.setAttribute('data-theme', body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+        }
+        function requestCourierService() {
+            triggerVibration();
+            const pickup = document.getElementById('courier-pickup').value.trim();
+            const dropoff = document.getElementById('courier-dropoff').value.trim();
+            const cost = 3500;
+
+            if (pickup && dropoff) {
+                if (walletBalance >= cost) {
+                    walletBalance -= cost;
+                    totalSpentMonth += cost;
+                    document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
+                    showToast('✅ تم طلب المندوب بنجاح!');
+                    historyData.push(`دزلي وجيبلي من (${pickup}) إلى (${dropoff})`);
+                    updateHistoryUI();
+                    showSection('tracking-section');
+                } else {
+                    showToast('رصيد المحفظة غير كافٍ!');
+                    showSection('wallet-section');
+                }
+            } else {
+                showToast('يرجى تحديد عنوان الاستلام والتسليم.');
+            }
+        }
+
+        function updateBusFare() {
+            const plan = document.getElementById('bus-plan-type').value;
+            document.getElementById('bus-total-price').innerText = (plan === 'monthly') ? "50,000 د.ع" : "200,000 د.ع";
+        }
+
+        function subscribeStudentBus() {
+            triggerVibration();
+            let cost = document.getElementById('bus-plan-type').value === 'monthly' ? 50000 : 200000;
+            if (walletBalance >= cost) {
+                walletBalance -= cost;
+                document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
+                showToast('✅ تم الاشتراك بنجاح في الخط الطلابي!');
+                historyData.push('اشتراك خط طلابي');
+                updateHistoryUI();
+                showSection('home-section');
+            } else {
+                showToast('رصيد المحفظة غير كافٍ!');
+                showSection('wallet-section');
+            }
+        }
+
+        function allocateFamilyAllowance() {
+            triggerVibration();
+            if (walletBalance >= 5000) {
+                walletBalance -= 5000;
+                document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
+                document.getElementById('family-wallet-balance').innerText = walletBalance.toLocaleString();
+                showToast('🎁 تم إرسال المصروف العائلي بنجاح!');
+            } else { showToast('الرصيد لا يكفي!'); }
+        }
+
+        function addFamilyMember() {
+            triggerVibration();
+            let name = document.getElementById('family-member-name').value.trim();
+            if (name) {
+                document.getElementById('family-members-list').innerHTML += `<div style="display: flex; justify-content: space-between; padding: 6px 0;"><span>👤 <b>${name}</b></span><span style="color:var(--secondary-color);">✔ متصل</span></div>`;
+                showToast(`تم ربط حساب (${name}) عائلياً!`);
+                document.getElementById('family-member-name').value = '';
+            }
+        }
         function getGPSLocation() {
             triggerVibration();
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
-                    document.getElementById('pickup').value = `موقعي الحالي في البصرة (${position.coords.latitude.toFixed(2)})`;
-                    showToast('تم تحديث موقعك بنجاح!');
+                    document.getElementById('pickup').value = `موقعي الحالي في البصرة`;
+                    showToast('تم تحديد الموقع عبر GPS!');
                 });
             }
-        }
-
-        function setSavedAddress(fieldId, addressText) {
-            triggerVibration();
-            document.getElementById(fieldId).value = addressText;
-            showToast(`تم تحديد عنوان: ${addressText}`);
         }
 
         function quickOneTapOrder() {
@@ -498,10 +510,9 @@
         function calculateDistanceAndFare() {
             const dest = document.getElementById('destination').value.trim();
             if (dest.length > 1) {
-                let distanceKm = (dest.length * 1.8).toFixed(1);
-                document.getElementById('est-distance').innerText = distanceKm + ' كم';
-                document.getElementById('est-time').innerText = Math.round(distanceKm * 2.5) + ' دقيقة';
-                document.getElementById('fare-price').innerText = (3000 + (Math.round(distanceKm) * 350)).toLocaleString() + ' د.ع';
+                document.getElementById('est-distance').innerText = '4.5 كم';
+                document.getElementById('est-time').innerText = '12 دقيقة';
+                document.getElementById('fare-price').innerText = '4,500 د.ع';
             }
         }
 
@@ -524,7 +535,7 @@
             triggerVibration();
             if (document.getElementById('promo-code').value.trim().toUpperCase() === 'BASRA') {
                 discountRate = 0.2;
-                showToast('تم تطبيق كود الخصم (BASRA) بنجاح (-20%)!');
+                showToast('تم تطبيق الخصم (-20%)!');
                 updateCartUI();
             }
         }
@@ -564,7 +575,7 @@
                 historyData.push(`رحلة تكسي من (${p}) إلى (${d})`);
                 updateHistoryUI();
                 showSection('tracking-section');
-            }
+            } else { showToast('يرجى تحديد الانطلاق والوجهة.'); }
         }
 
         function checkout() {
@@ -589,13 +600,14 @@
             triggerVibration();
             walletBalance += 10000;
             document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
+            document.getElementById('family-wallet-balance').innerText = walletBalance.toLocaleString();
             updateCartUI();
             showToast('تم شحن المحفظة بـ 10,000 د.ع!');
         }
 
         function openPaymentGateway() {
             triggerVibration();
-            let amount = prompt("أدخل مبلغ الشحن عبر زين كاش / ماستر كارد (د.ع):", "15000");
+            let amount = prompt("أدخل مبلغ الشحن عبر زين كاش (د.ع):", "15000");
             if(amount) {
                 walletBalance += parseInt(amount) || 0;
                 document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
@@ -606,33 +618,33 @@
 
         function transferBalanceToFriend() {
             triggerVibration();
-            let phone = prompt("أدخل رقم هاتف صديقك:", "077xxxxxxxx");
+            let phone = prompt("رقم هاتف صديقك:", "077xxxxxxxx");
             let amt = prompt("المبلغ المراد تحويله (د.ع):", "5000");
             if(phone && amt && walletBalance >= parseInt(amt)) {
                 walletBalance -= parseInt(amt);
                 document.getElementById('wallet-balance').innerText = walletBalance.toLocaleString();
-                showToast(`تم تحويل مبلغ ${amt} د.ع بنجاح للرقم ${phone}`);
+                showToast(`تم تحويل ${amt} د.ع بنجاح للرقم ${phone}`);
             }
         }
 
         function openGroupOrderModal() {
             triggerVibration();
-            prompt("👥 رابط السلة الجماعية:", "https://basrawi-app.web.app/group?room=basra-" + Math.floor(Math.random()*9000+1000));
+            prompt("👥 رابط السلة الجماعية:", "https://basrawi-app.web.app/group?room=basra-1942");
         }
 
         function showMonthlyAnalytics() {
             triggerVibration();
-            alert(`📊 تحليل المصاريف الشهرية:\n\n• إجمالي مصاريفك: ${totalSpentMonth.toLocaleString()} د.ع\n• تقييم حسابك: عميل VIP ذهبي ⭐`);
+            alert(`📊 تحليل المصاريف الشهرية:\n\n• إجمالي المصاريف: ${totalSpentMonth.toLocaleString()} د.ع\n• التقييم: عميل VIP ذهبي ⭐`);
         }
 
         function shareLiveLocationWhatsApp() {
             triggerVibration();
-            window.open(`https://wa.me/?text=` + encodeURIComponent("أنا في رحلة تكسي حالياً عبر تطبيق بصراوي."), '_blank');
+            window.open(`https://wa.me/?text=` + encodeURIComponent("موقعي الحالي في رحلة عبر تطبيق بصراوي."), '_blank');
         }
 
         function triggerSOSAlert() {
             triggerVibration();
-            if(confirm("🚨 هل أنت متأكد من إرسال إشارة طوارئ SOS لعمليات البصرة؟")) {
+            if(confirm("🚨 إرسال إشارة طوارئ SOS لعمليات البصرة؟")) {
                 showToast("⚠️ تم إرسال إشارة الطوارئ وموقعك لعمليات بصراوي.");
             }
         }
@@ -644,40 +656,29 @@
                 document.getElementById('destination').value = "منطقة العشار (بحث صوتي)";
                 calculateDistanceAndFare();
                 showSection('taxi-section');
-            }, 2500);
+            }, 2000);
         }
 
-        function saveProfile() { triggerVibration(); showToast('تم حفظ بيانات الحساب بنجاح!'); }
+        function saveProfile() { triggerVibration(); showToast('تم حفظ الملف الشخصي بنجاح!'); }
 
         function sendChatMessage() {
             let input = document.getElementById('chat-input'), box = document.getElementById('chat-messages');
             if (input.value.trim() !== '') {
                 box.innerHTML += `<p style="margin: 5px 0; text-align: right;"><b>أنت:</b> ${input.value}</p>`;
                 setTimeout(() => {
-                    box.innerHTML += `<p style="margin: 5px 0; color: var(--secondary-color);"><b>الكابتن:</b> وصلتي رسالتك!</p>`;
+                    box.innerHTML += `<p style="margin: 5px 0; color: var(--secondary-color);"><b>الكابتن:</b> ثواني وأكون يمك!</p>`;
                     box.scrollTop = box.scrollHeight;
                 }, 1000);
                 input.value = '';
-                box.scrollTop = box.scrollHeight;
             }
         }
 
-        function updateLoyaltyUI() { document.getElementById('loyalty-points').innerText = loyaltyPoints; }
         function updateHistoryUI() {
             const container = document.getElementById('history-list');
             if (historyData.length === 0) return;
             let html = '';
-            historyData.forEach(h => { 
-                html += `<div style="padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 8px; font-size: 13px;">✅ ${h}</div>`; 
-            });
+            historyData.forEach(h => { html += `<div style="padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 8px; font-size: 13px;">✅ ${h}</div>`; });
             container.innerHTML = html;
-        }
-
-        function updateWalletLogUI() {
-            const logContainer = document.getElementById('wallet-log');
-            let html = '';
-            walletLogData.forEach(item => { html += `<p style="margin: 2px 0;">${item}</p>`; });
-            logContainer.innerHTML = html;
         }
 
         function triggerVibration() { if (navigator.vibrate) navigator.vibrate(30); }
