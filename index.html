@@ -55,6 +55,8 @@
         .restaurant-item { padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .quick-tag { background: rgba(0,100,0,0.1); color: var(--primary-color); padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; display: inline-block; margin-top: 4px; font-weight: bold; }
         .weather-banner { background: #fff3cd; color: #856404; padding: 8px 12px; border-radius: 10px; font-size: 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border: 1px solid #ffeeba; }
+        .ai-bubble-user { background: var(--primary-color); color: white; padding: 8px 12px; border-radius: 12px 12px 0 12px; margin: 5px 0; text-align: right; max-width: 80%; margin-left: auto; font-size: 13px; }
+        .ai-bubble-bot { background: rgba(0,100,0,0.1); color: var(--text-color); padding: 8px 12px; border-radius: 12px 12px 12px 0; margin: 5px 0; text-align: right; max-width: 85%; font-size: 13px; border: 1px solid var(--primary-color); }
     </style>
 </head>
 <body data-theme="light">
@@ -90,9 +92,13 @@
                 <div><b>طقس البصرة اليوم:</b> أجواء مشمسة ودافئة (32°م). اطلب تكسي أو دز أغراضك بسلاسة!</div>
             </div>
 
-            <div style="background: rgba(0,100,0,0.08); padding: 8px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; font-size: 12px;">
-                <span>🎙️ ابحث أو اطلب بصوتك مباشرة:</span>
-                <button onclick="startVoiceSearch()" style="background: var(--primary-color); color: white; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px;">تحدث الآن 🎤</button>
+            <!-- كارت الذكاء الاصطناعي المباشر -->
+            <div style="background: linear-gradient(135deg, rgba(0,100,0,0.15), rgba(34,139,34,0.15)); padding: 12px; border-radius: 12px; border: 1.5px solid var(--primary-color); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <h3 style="font-size: 14px; color: var(--primary-color); margin-bottom: 2px;">🤖 سولف ويا بصراوي</h3>
+                    <p style="font-size: 11px; opacity: 0.85;">مساعدك الذكي يسولف وياك ويجاوبك على أي سؤال بالبصرة!</p>
+                </div>
+                <button onclick="showSection('ai-chat-section')" style="background: var(--primary-color); color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold; white-space: nowrap;">بلّش السالفة 💬</button>
             </div>
 
             <h2 id="t-what-to-do" style="font-size: 16px; margin-bottom: 10px;">ماذا ترغب أن تطلب اليوم؟</h2>
@@ -107,6 +113,10 @@
             </div>
 
             <div class="services-grid">
+                <div class="card" onclick="showSection('ai-chat-section')" style="border: 2px solid var(--primary-color); background: rgba(0,100,0,0.04);">
+                    <div class="icon">🤖</div>
+                    <h3 style="color: var(--primary-color);">سولف ويا بصراوي</h3>
+                </div>
                 <div class="card" onclick="showSection('taxi-section')">
                     <div class="icon">🚕</div>
                     <h3 id="t-taxi">حجز تكسي</h3>
@@ -115,9 +125,9 @@
                     <div class="icon">🍔</div>
                     <h3 id="t-restaurants">المطاعم والطعام</h3>
                 </div>
-                <div class="card" onclick="showSection('courier-section')" style="border: 2px solid var(--primary-color); background: rgba(0,100,0,0.04);">
+                <div class="card" onclick="showSection('courier-section')">
                     <div class="icon">📦</div>
-                    <h3 style="color: var(--primary-color);">دزلي وجيبلي</h3>
+                    <h3>دزلي وجيبلي</h3>
                 </div>
                 <div class="card" onclick="showSection('student-bus-section')">
                     <div class="icon">🚌</div>
@@ -135,12 +145,37 @@
                     <div class="icon">📜</div>
                     <h3 id="t-history">سجل الطلبات</h3>
                 </div>
-                <div class="card" onclick="showSection('profile-section')">
-                    <div class="icon">👤</div>
-                    <h3 id="t-profile">حسابي والعناوين</h3>
-                </div>
             </div>
         </div>
+        <!-- قسم سولف ويا بصراوي (مساعد الذكاء الاصطناعي) -->
+        <div id="ai-chat-section" class="section">
+            <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <span style="font-size: 24px;">🤖</span>
+                <div>
+                    <h2 style="margin: 0; font-size: 17px;">سولف ويا بصراوي</h2>
+                    <p style="font-size: 11px; opacity: 0.7;">ذكاء اصطناعي بصراوي يجاوبك على أي سؤال ببالك!</p>
+                </div>
+            </div>
+
+            <div id="ai-messages-box" style="background: rgba(0,0,0,0.03); height: 260px; border-radius: 10px; padding: 12px; margin: 10px 0; overflow-y: auto; border: 1px solid var(--border-color);">
+                <div class="ai-bubble-bot">
+                    <b>بصراوي:</b> ياهلا بيك عيني! أنا بصراوي، سولف وياي بأي شيء ببالك.. عن مطاعم البصرة، الشوارع، التكسي، أو أي سؤال عاجبك! 🌴
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
+                <span class="quick-tag" onclick="sendQuickAiPrompt('شنو أحسن مطعم مشاوي بالعشار؟')">🍔 مطاعم العشار</span>
+                <span class="quick-tag" onclick="sendQuickAiPrompt('شلون أحجز تكسي للتنومة؟')">🚕 حجز تكسي</span>
+                <span class="quick-tag" onclick="sendQuickAiPrompt('شنو ميزة دزلي وجيبلي؟')">📦 دزلي وجيبلي</span>
+            </div>
+
+            <div style="display: flex; gap: 5px;">
+                <input type="text" id="ai-input" placeholder="اسأل بصراوي أي سؤال..." style="margin: 0; flex: 1;" onkeypress="if(event.key==='Enter') sendAiMessage()">
+                <button class="btn" style="width: auto; margin: 0; padding: 8px 16px;" onclick="sendAiMessage()">إرسال 🚀</button>
+            </div>
+        </div>
+
         <!-- قسم دزلي وجيبلي -->
         <div id="courier-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
@@ -170,7 +205,6 @@
 
             <button class="btn" onclick="requestCourierService()">اطلب المندوب الآن 🚴‍♂️</button>
         </div>
-
         <!-- قسم عائلة بصراوي والأمان الذكي -->
         <div id="family-circle-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
@@ -195,6 +229,7 @@
                 </div>
             </div>
         </div>
+
         <!-- قسم خطوط نقل الطلاب -->
         <div id="student-bus-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
@@ -225,7 +260,6 @@
 
             <button class="btn" onclick="subscribeStudentBus()">تأكيد واشتراك بالخط 🎓</button>
         </div>
-
         <!-- قسم التكسي الذكي -->
         <div id="taxi-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
@@ -254,6 +288,7 @@
             </div>
             <button class="btn" onclick="bookTaxi()">اطلب الكابتن الآن</button>
         </div>
+
         <!-- قسم المطاعم -->
         <div id="restaurants-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
@@ -285,7 +320,6 @@
                 </div>
             </div>
         </div>
-
         <!-- سلة التسوق -->
         <div id="cart-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
@@ -300,6 +334,7 @@
             <p style="font-weight: bold; margin-top: 10px;">المجموع النهائي: <span id="cart-total">0</span> د.ع</p>
             <button class="btn" onclick="checkout()">تأكيد وإرسال الطلب</button>
         </div>
+
         <!-- المحفظة والمالية -->
         <div id="wallet-section" class="section">
             <button class="btn back-btn" onclick="showSection('home-section')">الرجوع للرئيسية</button>
@@ -400,6 +435,45 @@
             else if (sectionId === 'student-bus-section') { initBusRouteMap(); }
         }
 
+        // خوارزمية الذكاء الاصطناعي "سولف ويا بصراوي"
+        function sendAiMessage() {
+            const input = document.getElementById('ai-input');
+            const userMsg = input.value.trim();
+            if(!userMsg) return;
+
+            const box = document.getElementById('ai-messages-box');
+            box.innerHTML += `<div class="ai-bubble-user">${userMsg}</div>`;
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
+
+            setTimeout(() => {
+                let botReply = getAiResponse(userMsg);
+                box.innerHTML += `<div class="ai-bubble-bot"><b>بصراوي:</b> ${botReply}</div>`;
+                box.scrollTop = box.scrollHeight;
+            }, 700);
+        }
+
+        function sendQuickAiPrompt(text) {
+            document.getElementById('ai-input').value = text;
+            sendAiMessage();
+        }
+
+        function getAiResponse(msg) {
+            msg = msg.toLowerCase();
+            if (msg.includes('مطعم') || msg.includes('أكل') || msg.includes('مشاوي')) {
+                return 'أهل البصرة يحبون المشاوي والأكلات الشعبية! أنصحك بمطعم الشطيطة بالعشار أو برجر البصرة. وتقدر تطلبهم فوراً من قسم المطاعم بالتطبيق 🍔!';
+            } else if (msg.includes('تكسي') || msg.includes('سيارة') || msg.includes('روحة')) {
+                return 'تدلل خوي! تقدر تحجز تكسي فوراً من قسم "حجز تكسي" بالتطبيق، تختار السيارة المكيفة وتتتبع الكابتن على خريطة شوارع البصرة 🚕.';
+            } else if (msg.includes('دزلي') || msg.includes('أغراض') || msg.includes('مفاتيح') || msg.includes('علاج')) {
+                return 'ميزة (دزلي وجيبلي) بخدمتك! ندز المندوب يجيبلك أوراقك، مفاتيحك، أو علاجك من أي منطقة بالبصرة بثواني 📦.';
+            } else if (msg.includes('جامعة') || msg.includes('خط') || msg.includes('كرمة') || msg.includes('طالب')) {
+                return 'عندنا خطوط نقل طلاب مكيفة ومباشرة لمجمع كرمة علي وباب الزبير مع اشتراكات شهرية وفصلية مريحة 🚌🎓.';
+            } else if (msg.includes('سلام') || msg.includes('هلا') || msg.includes('شلونك')) {
+                return 'يا هلا وكل الغلا بأهلنا بالبصرة! نورت تطبيق بصراوي.. أمرني شنو محتاج اليوم؟ 🌴';
+            } else {
+                return `تدلل عيني! بشأن سؤالك عن (${msg})، بصراوي بخدمتك دائماً. تقدر تجرب خدمات التكسي، المطاعم، أو التوصيل السريع من القائمة الرئيسية 🚀.`;
+            }
+        }
         function initBusRouteMap() {
             setTimeout(() => {
                 if (!busMap) {
@@ -427,6 +501,7 @@
             const body = document.body;
             body.setAttribute('data-theme', body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
         }
+
         function requestCourierService() {
             triggerVibration();
             const pickup = document.getElementById('courier-pickup').value.trim();
@@ -651,12 +726,8 @@
 
         function startVoiceSearch() {
             triggerVibration();
-            showToast("🎤 جاري الاستماع...");
-            setTimeout(() => {
-                document.getElementById('destination').value = "منطقة العشار (بحث صوتي)";
-                calculateDistanceAndFare();
-                showSection('taxi-section');
-            }, 2000);
+            showSection('ai-chat-section');
+            showToast("🎤 افتح قسم سولف ويا بصراوي واكتب أو تحدث!");
         }
 
         function saveProfile() { triggerVibration(); showToast('تم حفظ الملف الشخصي بنجاح!'); }
